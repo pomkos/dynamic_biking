@@ -21,7 +21,7 @@ def save_as_files(dataframe: pd.DataFrame, save_form) -> None:
         temp_df.columns = ['Date','HR','Cadence','Power','ID'] # format col name for Matlab
         h.save_dataset(temp_df,f"output/{p}")
 
-st.cache()
+@st.cache()
 def facet_grid(x,y,title, dataframe, hue=None, reverse=False, save=False):
     '''
     Returns a figure for streamlit. Creates facet grid
