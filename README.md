@@ -27,6 +27,17 @@ pip install -r requirements.txt
 
 4. Launch script by double clicking on `start_me.bat`
 
+# MatLab script
+
+The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW compiler. This requires logging into MatLab using an account.
+
+1. Open MatLab
+2. Click `APPS` tab
+3. Click `Get More Apps`
+4. In the search box click `Clear Filters` and then search for MinGW
+5. Click `MATLAB Support for MinGW-w64 C/C++ Compiler` in the results
+6. Click `Install`
+
 # Notes
 
 This repo does not contain the MatLab scripts required for ApEn, SamEn, and SpecEn analysis of dynamic bike cadence. The scripts contained in this repo are self contained, but the MatLab scripts must be moved to the `dynamic_biking` folder before entropy analysis can proceed. 
