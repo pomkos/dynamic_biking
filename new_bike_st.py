@@ -5,6 +5,12 @@ import os                                   # Get directory location
 st.set_page_config(page_title='Dynamic Bike Script', page_icon=':bike:')                     # Give website a title and icon
 st.title("Dynamic Bike Script")                                                              # Title on main page
 
+# Create input/output folders
+if not os.path.exists('input'):
+    os.makedirs('input')
+if not os.path.exists('output'):
+    os.makedirs('output')
+
 get_info = st.sidebar.radio('What should we explore?',                                       # Options in the sidebar
                             options=['Homepage','Step 1: Overview', 'Step 2: Formatting', 'Step 3: MatLab'],
                             index=0).lower()
