@@ -88,7 +88,7 @@ def app(file_locs):
         st.subheader("What should be saved?")
         save_plot = st.checkbox("The plot as it looks now")
         save_all_in_one = st.checkbox("All sessions in one excel file")
-        save_matlab = st.checkbox("All sessions formatted for MatLab")
+        save_matlab = st.checkbox("All sessions formatted for MatLab (required for MatLab entropy script)", value=True)
 
         save_us = st.form_submit_button('Save')
         save_form = st.empty()

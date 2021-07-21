@@ -32,7 +32,7 @@ def app(file_locs):
 
     with save_form:
         st.subheader("What should be saved?")
-        save_df_info = st.checkbox('The table as an excel file')
+        save_df_info = st.checkbox('The table as an excel file (required for MatLab entropy script)', value=True)
         save_plot = st.checkbox('The plot as it looks now')
         save = st.form_submit_button('Save')
         save_form = st.empty()
