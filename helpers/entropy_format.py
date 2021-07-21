@@ -21,7 +21,6 @@ def save_as_files(dataframe: pd.DataFrame, save_form) -> None:
         temp_df.columns = ['Date','HR','Cadence','Power','ID'] # format col name for Matlab
         h.save_dataset(temp_df,f"output/{p}")
 
-@st.cache()
 def facet_grid(x,y,title, dataframe, hue=None, reverse=False, save=False):
     '''
     Returns a figure for streamlit. Creates facet grid
@@ -73,6 +72,7 @@ def app(file_locs):
 
     new_df = cut_dataframe(df, start, end).copy() # run if the start/end values are changed
     st.subheader("Are there any sudden jumps?")
+    st.write("Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets.")
     reverse = st.checkbox("Columns as participants")
     plot = facet_grid(x='seconds_elapsed',y='speed_rpm', dataframe=new_df ,   # run if parameters are changed
                     title= 'Cadence over time', reverse=reverse)

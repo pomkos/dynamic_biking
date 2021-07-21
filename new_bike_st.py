@@ -13,13 +13,13 @@ input_folder = input_place.text_input("Paste location of files, if not in input 
                             value="input")
 if not input_folder:
     st.stop()
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 out_path = dir_path + '\\output'
 file_locs = glob.glob(f"{input_folder}/*.txt", recursive=True)                               # Make a list of txt files in the folder and subfolders
 if len(file_locs) < 1:
     st.warning('No ".txt" files found. Is this the right folder?')
     st.stop()
-
 # Just a basic readme, edit as needed
 if 'homepage' in get_info:
     input_place.empty()
@@ -67,11 +67,12 @@ elif 'matlab' in get_info:
     st.write(f"""
     1. Double click `apsamen_cleaned.m`
     1. Edit the file at:
-        * Line 16: `'{dir_path}'`
-        * Line 19: `'{out_path}'`
-        * Line 21: output filename can be anything but must end in .xls (ex: `entropies.xls`)
+        * Line 16: in quotes: `'{dir_path}'`
+        * Line 19: in quotes: `'{out_path}'`
+        * Line 21: output filename can be anything but must end in .xls (ex: in quotes: `entropies.xls`)
     1. Click the "Run" button under "Editor" tab
-        * In case of an error like below, click `add its folder to the MATLAB path` and run the script again
+    
+    ### Troubleshooting
     """)
     st.code("""Building with 'MinGW64 Compiler (C)'.
 MEX completed successfully.
@@ -83,6 +84,10 @@ Change the MATLAB current folder or add its folder to the MATLAB path.
 Error in apsamen_cleaned (line 61)
          [ap(n,num),  sam(n,num)]  = ApSamEn(data1(N1:N2,num),2,0.2*std1(num),n);
     """, language="matlab")
+
+    st.write("""
+    * In case the error above appears, click `add its folder to the MATLAB path` and run the script again
+    """)
     st.write("""
     """)
     st.subheader("Retrieving Entropy Results")
