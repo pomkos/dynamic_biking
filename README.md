@@ -10,13 +10,11 @@ This repo was created to share the code used to create the entropy analysis work
 # Instructions
 
 1. Run `install.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
-2. Edit `start_me.bat` to reflect location of miniconda, usually in the home directory. Line 9 should look like:
-
-```
-SET user=albei
-```
-
-3. Launch script by double clicking on `start_me.bat`
+2. Launch script by double clicking on `start_me.bat`
+3. All dynamic bike files should be placed in `input` folder
+4. `Step 1`: Click save at the bottom of the page
+5. `Step 2`: Clip files as needed, then click save at the bottom of the page
+6. `Step 3`: Follow instructions to edit and run MatLab script
 
 # MatLab script
 
