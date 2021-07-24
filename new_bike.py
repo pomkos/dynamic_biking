@@ -46,11 +46,11 @@ elif 'matlab' in get_info:
     input_place.empty()
     st.subheader('Editing MatLab Script')
     st.write(f"""
-    1. Double click `apsamen_cleaned.m`
+    1. Double click `entropy_script.m`
     1. Edit the file at:
-        * Line 16: in quotes: `'{dir_path}'`
+        * Line 17: in quotes: `'{dir_path}'`
         * Line 19: in quotes: `'{out_path}'`
-        * Line 21: output filename can be anything but must end in .xls (ex: in quotes: `entropies.xls`)
+        * Line 22: output filename can be anything but must end in .xls (ex: in quotes: `entropies.xls`)
     1. Click the "Run" button under "Editor" tab
     """)
     matlab = read_txt_as_str('matlab_instructions')
