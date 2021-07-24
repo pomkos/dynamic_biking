@@ -50,9 +50,11 @@ echo "Just one last thing, and this only has to be done once per windows account
 echo "-------------------------------------"
 echo "Step 1. Right click start_me.bat"
 echo "Step 2. Click 'Open with Code'"
-echo "Step 3. Line 9: replace everything after '=' with the windows username"
+echo "Step 3. Line 9: replace everything after '=' with %user%"
 echo "Step 4. File -> Save"
 echo "Step 5. Double click start_me.bat to start the script"
+echo.
+echo "This window can be closed"
 echo.
 :: This line keeps the terminal open ::
 PAUSE
@@ -79,9 +81,11 @@ echo.
 echo "Just one last thing, and this only has to be done once per windows account!"
 echo "Step 1. Right click start_me.bat"
 echo "Step 2. Click 'Open with Code'"
-echo "Step 3. Line 9: replace everything after '=' with the windows username"
+echo "Step 3. Line 9: replace everything after '=' with %user%"
 echo "Step 4. Save"
 echo "Step 5. Double click start_me.bat to start the script"
+echo.
+echo "This window can be closed"
 echo.
 :: This line keeps the terminal open ::
 PAUSE

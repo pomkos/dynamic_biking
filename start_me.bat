@@ -19,7 +19,7 @@ echo "Keep this window open while the script is running"
 echo "-------------------------------------"
 
 :: This line just runs the streamlit script ::
-streamlit run new_bike_st.py
+streamlit run new_bike.py
 
 :: Keep the terminal open ::
 PAUSE
