@@ -87,6 +87,9 @@ def get_filename(file_locs, pattern):
     filenames.sort()
     return filenames
 
+def cut_some_dfs(dataframe, unique_ids):
+    ...
+
 def app(file_locs):
     df = load_dataframe(file_locs) # run once
     pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
@@ -110,14 +113,14 @@ def app(file_locs):
     st.info("Some sessions may need different cuts. If this is the case, select the appropriate file(s) below. Otherwise select 'None'.")
 
     file_options = ['None'] + all_filenames
-    details = st.multiselect("Select files that need more cuts", options=file_options, default='None')
+    
     with st.beta_expander('Show current dataset'):
         st.info("This is a dataset of all files in one, save if you want all time series in one file.")
         save_new_df = st.checkbox("Save table")
         st.write(new_df)
         if save_new_df:
             h.save_dataset(new_df, 'all_in_one.xlsx')
-    with st.form('save_results', clear_on_submit=True):
+    with st.form('save_results'):
         st.subheader("What should be saved?")
         save_plot = st.checkbox("The plot as it looks now")
         save_all_in_one = st.checkbox("All sessions in one excel file")

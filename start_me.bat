@@ -4,11 +4,12 @@
 
 @ECHO OFF
 
-:: EDIT ME ::
-:: Edit the below line to add windows username, without quotes ::
-SET user=albei
+:: Grab user name from new_bike.config
+findstr /V "#" new_bike.config >new_bike.tmpcfg
+set /p user= < new_bike.tmpcfg
+del new_bike.tmpcfg
 
-:: 
+:: Run anaconda 
 CALL C:\Users\%user%\anaconda3\Scripts\activate.bat C:\Users\%user%\anaconda3
 
 echo.

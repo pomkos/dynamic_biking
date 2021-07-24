@@ -66,9 +66,9 @@ EXIT
 :: ------------------------ MINICONDA SECTION ------------------------ ::
 :mini
 SET /p user="What is the windows username? "
+:: Store the username in new_bike.config
+echo %user% > "new_bike.config"
 
-:: EDIT ME ::
-:: Edit the below line to point to the anaconda directory as demonstrated below ::
 CALL C:\Users\%user%\miniconda3\Scripts\activate.bat C:\Users\%user%\miniconda3
 :: This line installs everything in the requirements.txt file ::
 pip install -r requirements.txt --upgrade

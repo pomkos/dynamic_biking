@@ -1,10 +1,16 @@
-@ NOTE
-@ 
+@@@@@@ HOW TO EDIT @@@@@@
+@ Any line that starts with '@' will not appear in the script instructions
+@ Headings are indicated with '#' (More than one # indicates subheadings)
+@ Bullet points are created with '*'
+@ Numbered bullet points are created with '1.'
+@ To create links use: [click me](https://kent.edu), user will get a clickable "click me"
+@@@@@@
 
 
 ### Troubleshooting
 
-```Building with 'MinGW64 Compiler (C)'.
+```
+Building with 'MinGW64 Compiler (C)'.
 MEX completed successfully.
 'ApSamEn' is not found in the current folder or on the MATLAB path, but exists in:
     [FOLDER LOCATION]
