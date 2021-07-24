@@ -15,10 +15,11 @@ get_info = st.sidebar.radio('What should we explore?',                          
                             options=['Homepage','Step 1: Overview', 'Step 2: Formatting', 'Step 3: MatLab'],
                             index=0).lower()
 input_place = st.empty()
+folder = st.text_input('paste location of files')
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 out_path = dir_path + '\\output'
-file_locs = glob.glob("input/*.txt", recursive=True)                               # Make a list of txt files in the folder and subfolders
+file_locs = glob.glob(f"{folder}/*.txt", recursive=True)                               # Make a list of txt files in the folder and subfolders
 if len(file_locs) < 1:
     st.warning('No ".txt" files found.')
     st.stop()
