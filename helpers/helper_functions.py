@@ -2,11 +2,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def save_dataset(dataframe, name):
+def save_dataset(dataframe, name, extension='xlsx'):
     '''
     Function to standardize saving files
     '''
-    dataframe.to_excel(f'{name}.xlsx', index=False)
+    dataframe.to_excel(f'{name}.{extension}', index=False)
 
 def bar_plot(x, y, title, dataframe, hue=None, save=False):
     '''

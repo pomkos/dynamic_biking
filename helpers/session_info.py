@@ -40,7 +40,7 @@ def app(file_locs):
 
     if save:
         if save_df_info:
-            h.save_dataset(df_info, 'session_info')
+            h.save_dataset(df_info, 'output/session_info', extension='xls')
         if save_plot:
             h.bar_plot('participant','length_minutes', dataframe=df_info , title= 'Length of each session', save=True)
         save_form.success('Saved!')
