@@ -5,6 +5,18 @@ import os                                   # Get directory location
 st.set_page_config(page_title='Dynamic Bike Script', page_icon=':bike:')                     # Give website a title and icon
 st.title("Dynamic Bike Script")                                                              # Title on main page
 
+def read_txt_as_str(filename: str) -> str:
+    '''
+    Loads txt files, returns contents as string
+    '''
+    contents = ''
+    with open(f'{filename}.txt','r') as f: # so people can edit instructions without seeing code
+        for line in f.readlines():
+            # the "@" is reserved for commenting within the text file
+            if line[0] != '@':
+                contents += line
+    return contents
+
 # Create input/output folders
 if not os.path.exists('input'):
     os.makedirs('input')
@@ -15,7 +27,8 @@ get_info = st.sidebar.radio('What should we explore?',                          
                             options=['Homepage','Step 1: Overview', 'Step 2: Formatting', 'Step 3: MatLab'],
                             index=0).lower()
 input_place = st.empty()
-folder = st.text_input('paste location of files')
+# folder = st.text_input('paste location of files')
+folder = 'input'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 out_path = dir_path + '\\output'
@@ -27,35 +40,9 @@ if len(file_locs) < 1:
 if 'homepage' in get_info:
     input_place.empty()
     st.write("Welcome to the Dynamic Bike Script :bike:! This script was created to make entropy analysis more accurate and less prone to human error.")
-    st.write("""
-    ### Prerequisites
-    1. All bike files copied to this machine (input folder is a good location)
-    1. Miniconda installed with:
-        * Python 3.8
-        * All libraries found in `requirements.txt`
-    1. Line 7 of `start_me.bat` edited to reflect location of miniconda 
+    homepage = read_txt_as_str('homepage')
+    st.write(homepage)
 
-    ### How To
-
-    #### Step 1: Overview
-    This step initializes the `session_info.py` script. It will preview settings and length of each bike session, including as a bar graph.
-    
-    1. Review results
-    1. Save dataframe as excel file (Required)
-    1. Save bar plot (optional)
-
-    #### Step 2: Formatting
-    The purpose of this step is to get each bike session file ready for entropy analysis. Minor cleaning and column renaming is involved.
-
-    1. Review results
-    1. Edit `Start` and `End` in the sidebar as needed to minimize severe jumps in cadence until satisfied
-    1. Save plot (optional)
-    1. Save all sessions in one excel sheet (optional)
-    1. Save all sessions in separate excel sheets (Required)
-
-    #### Step 3: MatLab
-    Some minor adjustments to the MatLab script may be required if the script is run on a new laptop or by a new user
-    """)
 elif 'overview' in get_info:
     from helpers import session_info
     session_info.app(file_locs)                                                              # Load session_info app
@@ -74,24 +61,6 @@ elif 'matlab' in get_info:
         * Line 19: in quotes: `'{out_path}'`
         * Line 21: output filename can be anything but must end in .xls (ex: in quotes: `entropies.xls`)
     1. Click the "Run" button under "Editor" tab
-    
-    ### Troubleshooting
     """)
-    st.code("""Building with 'MinGW64 Compiler (C)'.
-MEX completed successfully.
-'ApSamEn' is not found in the current folder or on the MATLAB path, but exists in:
-    [FOLDER LOCATION]
-
-Change the MATLAB current folder or add its folder to the MATLAB path.
-
-Error in apsamen_cleaned (line 61)
-         [ap(n,num),  sam(n,num)]  = ApSamEn(data1(N1:N2,num),2,0.2*std1(num),n);
-    """, language="matlab")
-
-    st.write("""
-    * In case the error above appears, click `add its folder to the MATLAB path` and run the script again
-    """)
-    st.write("""
-    """)
-    st.subheader("Retrieving Entropy Results")
-    st.write("All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder")
+    matlab = read_txt_as_str('matlab_instructions')
+    st.write(matlab)

@@ -2,12 +2,19 @@
 :: Last edited by:
 ::                 Peter Gates; July 18, 2021 ::
 
+@ECHO OFF
+
 :: EDIT ME ::
 :: Edit the below line to point to the anaconda directory as demonstrated below ::
-
 CALL C:\Users\albei\anaconda3\Scripts\activate.bat C:\Users\albei\anaconda3
 
+pip install -r requirements.txt
+echo ''
+echo "-------------------------------------"
 echo "Starting the dynamic bike script"
+echo ''
+echo "Keep this window open while the script is running"
+echo "-------------------------------------"
 
 :: This line just runs the streamlit script ::
 streamlit run new_bike_st.py
