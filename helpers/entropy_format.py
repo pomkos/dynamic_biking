@@ -63,7 +63,7 @@ def cut_dataframe(dataframe, start, end):
         new_df = dataframe.copy()
     return new_df
 
-def get_filename(file_locs, pattern):
+def get_filename(file_locs, pattern=None):
     '''
     Returns a list of filenames, extract from string of location
     '''
@@ -92,8 +92,8 @@ def cut_some_dfs(dataframe, unique_ids):
 
 def app(file_locs):
     df = load_dataframe(file_locs) # run once
-    pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
-    all_filenames = get_filename(file_locs,pattern)
+    # pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
+    all_filenames = get_filename(file_locs)
     # st.write(all_filenames)
     # st.stop()
     st.sidebar.write('--------------------')
@@ -109,11 +109,7 @@ def app(file_locs):
         plot = facet_grid(x='seconds_elapsed',y='speed_rpm', dataframe=new_df ,   # run if parameters are changed
                         title= 'Cadence over time', reverse=reverse)
         st.pyplot(plot.fig)
-
-    st.info("Some sessions may need different cuts. If this is the case, select the appropriate file(s) below. Otherwise select 'None'.")
-
-    file_options = ['None'] + all_filenames
-    
+   
     with st.beta_expander('Show current dataset'):
         st.info("This is a dataset of all files in one, save if you want all time series in one file.")
         save_new_df = st.checkbox("Save table")

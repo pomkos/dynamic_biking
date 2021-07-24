@@ -24,7 +24,7 @@ ECHO "The link didn't open? Copy paste into your browser: https://code.visualstu
 ECHO "Close the browser to continue"
  "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" https://code.visualstudio.com/Download
 ECHO.
-SET /p cntn="Step 3. Did miniconda install? (Y/n): "
+SET /p cntn="Step 3. Did miniconda and Visual Studio Code install? (Y/n): "
 if %cntn%=="Y" GOTO mini else ECHO "Please contact technical support"
 :eof
 :end
@@ -45,16 +45,7 @@ echo "-------------------------------------"
 echo "Required libraries installed."
 echo "-------------------------------------"
 echo.
-echo "-------------------------------------"
-echo "Just one last thing, and this only has to be done once per windows account!"
-echo "-------------------------------------"
-echo "Step 1. Right click start_me.bat"
-echo "Step 2. Click 'Open with Code'"
-echo "Step 3. Line 9: replace everything after '=' with %user%"
-echo "Step 4. File -> Save"
-echo "Step 5. Double click start_me.bat to start the script"
-echo.
-echo "This window can be closed"
+echo "Please open start_me.bat"
 echo.
 :: This line keeps the terminal open ::
 PAUSE
@@ -78,14 +69,7 @@ echo "-------------------------------------"
 echo "Required libraries installed."
 echo "-------------------------------------"
 echo.
-echo "Just one last thing, and this only has to be done once per windows account!"
-echo "Step 1. Right click start_me.bat"
-echo "Step 2. Click 'Open with Code'"
-echo "Step 3. Line 9: replace everything after '=' with %user%"
-echo "Step 4. Save"
-echo "Step 5. Double click start_me.bat to start the script"
-echo.
-echo "This window can be closed"
+echo "Please open start_me.bat"
 echo.
 :: This line keeps the terminal open ::
 PAUSE

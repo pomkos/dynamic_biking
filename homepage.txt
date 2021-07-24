@@ -6,14 +6,6 @@
 @ To create links use: [click me](https://kent.edu), user will get a clickable "click me"
 @@@@@@
 
-### Prerequisites
-1. All bike files copied to the input folder
-1. [Miniconda](https://docs.conda.io/en/latest/miniconda.html) installed with:
-    * Python 3.8
-    * All libraries found in `requirements.txt`
-
-1. Line 7 of `start_me.bat` edited to reflect location of miniconda 
-
 ### How To
 
 #### Step 1: Overview
