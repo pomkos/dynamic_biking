@@ -1,18 +1,20 @@
 :: This batch file runs the streamlit app made for the dynamic bike ::
 :: Last edited by:
-::                 Peter Gates; July 18, 2021 ::
+::                 Peter Gates; July 24, 2021 ::
 
 @ECHO OFF
 
 :: EDIT ME ::
-:: Edit the below line to point to the anaconda directory as demonstrated below ::
-CALL C:\Users\albei\anaconda3\Scripts\activate.bat C:\Users\albei\anaconda3
+:: Edit the below line to add windows username, without quotes ::
+SET user=albei
 
-pip install -r requirements.txt
-echo ''
+:: 
+CALL C:\Users\%user%\anaconda3\Scripts\activate.bat C:\Users\%user%\anaconda3
+
+echo.
 echo "-------------------------------------"
 echo "Starting the dynamic bike script"
-echo ''
+echo.
 echo "Keep this window open while the script is running"
 echo "-------------------------------------"
 
