@@ -88,7 +88,6 @@ def get_filename(file_locs, pattern):
     return filenames
 
 def app(file_locs):
-    from icecream import ic
     df = load_dataframe(file_locs) # run once
     pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
     all_filenames = get_filename(file_locs,pattern)
