@@ -1,5 +1,7 @@
-pandas
-seaborn
-streamlit
-matplotlib
-stqdm
+pandas       # dataset handling
+seaborn      # plotting facetgrid
+streamlit    # webgui for script
+matplotlib   # labeling x/y axis
+stqdm        # progress bar
+openpyxl     # handling excel files
+re           # handling strings using regx

@@ -63,8 +63,37 @@ def cut_dataframe(dataframe, start, end):
         new_df = dataframe.copy()
     return new_df
 
+def get_filename(file_locs, pattern):
+    '''
+    Returns a list of filenames, extract from string of location
+    '''
+    import re
+    stripped = [loc.lower().split('dynamic') for loc in file_locs if 'dynamic' in loc]
+    filenames = []
+    nolabels = []
+    for file in file_locs:
+        if ("/" in file) or ("\\" in file):
+            filename = file.replace("\\", "/").split("/")[-1].lower()
+            newname = re.findall('\d{2}_\d{2}_\d{2}_([a-z].+)\.txt$',filename)[0] # extract everything between the time and .txt
+            newname = newname.replace('dynamic','').replace('static','').strip('_') # remove dynamic and static
+            if len(newname) == 0: # if regex didn't find a label, the file was named incorrectly
+                nolabels.append(filename)
+                # NEED TO NOTIFY USER AND STOP SCRIPT
+            else:
+                filenames.append(newname)
+        else:
+            filename = file
+            filenames.append(file)
+    filenames.sort()
+    return filenames
+
 def app(file_locs):
+    from icecream import ic
     df = load_dataframe(file_locs) # run once
+    pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
+    all_filenames = get_filename(file_locs,pattern)
+    # st.write(all_filenames)
+    # st.stop()
     st.sidebar.write('--------------------')
     start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)
     end = st.sidebar.number_input("End", min_value=0.0, step=1.0)
@@ -74,10 +103,15 @@ def app(file_locs):
     st.subheader("Are there any sudden jumps?")
     st.write("Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets.")
     reverse = st.checkbox("Columns as participants")
-    plot = facet_grid(x='seconds_elapsed',y='speed_rpm', dataframe=new_df ,   # run if parameters are changed
-                    title= 'Cadence over time', reverse=reverse)
-    st.pyplot(plot.fig)
-    
+    with st.spinner("Loading facet grid plot"):
+        plot = facet_grid(x='seconds_elapsed',y='speed_rpm', dataframe=new_df ,   # run if parameters are changed
+                        title= 'Cadence over time', reverse=reverse)
+        st.pyplot(plot.fig)
+
+    st.info("Some sessions may need different cuts. If this is the case, select the appropriate file(s) below. Otherwise select 'None'.")
+
+    file_options = ['None'] + all_filenames
+    details = st.multiselect("Select files that need more cuts", options=file_options, default='None')
     with st.beta_expander('Show current dataset'):
         st.info("This is a dataset of all files in one, save if you want all time series in one file.")
         save_new_df = st.checkbox("Save table")
