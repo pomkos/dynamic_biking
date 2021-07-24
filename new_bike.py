@@ -33,24 +33,15 @@ folder = 'input'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 out_path = dir_path + '\\output'
 file_locs = glob.glob(f"{folder}/*.txt", recursive=True)                               # Make a list of txt files in the folder and subfolders
-if len(file_locs) < 1:
-    st.warning('No ".txt" files found.')
-    st.stop()
+
 # Just a basic readme, edit as needed
 if 'homepage' in get_info:
     input_place.empty()
     st.write("Welcome to the Dynamic Bike Script :bike:! This script was created to make entropy analysis more accurate and less prone to human error.")
     homepage = read_txt_as_str('homepage')
     st.write(homepage)
-
-elif 'overview' in get_info:
-    from helpers import session_info
-    session_info.app(file_locs)                                                              # Load session_info app
-
-elif 'format' in get_info:
-    from helpers import entropy_format
-    entropy_format.app(file_locs)                                                            # Load entropy_format 
-
+    st.stop()
+    
 elif 'matlab' in get_info:
     input_place.empty()
     st.subheader('Editing MatLab Script')
@@ -64,3 +55,16 @@ elif 'matlab' in get_info:
     """)
     matlab = read_txt_as_str('matlab_instructions')
     st.write(matlab)
+    st.stop()
+
+if len(file_locs) < 1:
+    st.warning('No ".txt" files found.')
+    st.stop()
+
+if 'overview' in get_info:
+    from helpers import session_info
+    session_info.app(file_locs)                                                              # Load session_info app
+
+elif 'format' in get_info:
+    from helpers import entropy_format
+    entropy_format.app(file_locs)                                                            # Load entropy_format 
