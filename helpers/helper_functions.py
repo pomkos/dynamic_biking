@@ -2,6 +2,38 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+def get_idsess(filename: str, pattern:str):
+    '''
+    Returns a list of filenames, extract from string of location
+    '''
+    import re
+    import streamlit as st
+
+    # filenames = []
+    # nolabels = []
+    # for file in file_locs:
+    #     if ("/" in file) or ("\\" in file):
+    #         filename = file.replace("\\", "/").split("/")[-1].lower()
+    #         newname = re.findall('\d{2}_\d{2}_\d{2}_([a-z].+)\.txt$',filename)[0] # extract everything between the time and .txt
+    #         newname = newname.replace('dynamic','').replace('static','').strip('_') # remove dynamic and static
+    #         if len(newname) == 0: # if regex didn't find a label, the file was named incorrectly
+    #             nolabels.append(filename)
+    #             # NEED TO NOTIFY USER AND STOP SCRIPT
+    #         else:
+    #             filenames.append(newname)
+    #     else:
+    #         filename = file
+    #         filenames.append(file)
+    # filenames.sort()
+    if pattern:
+        my_id = re.findall(f"({pattern['id']})", filename)[0]
+        sess = re.findall(f"({pattern['sess']})", filename)[0]
+        return my_id, sess
+    else:
+        my_id = filename.split('_')[-2].strip('.txt')
+        sess = filename.split('_')[-1].strip('.txt')
+        return my_id, sess
+
 def save_dataset(dataframe, name, extension='xlsx'):
     '''
     Function to standardize saving files
@@ -20,7 +52,7 @@ def bar_plot(x, y, title, dataframe, hue=None, save=False):
         plt.savefig('output/bar_plot.png', dpi=300)
     return fig
 
-def file_formatter(file: str, i: int) -> pd.DataFrame:
+def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
     Formats the new dynamic bike output files into standard dataframes
 
@@ -34,7 +66,7 @@ def file_formatter(file: str, i: int) -> pd.DataFrame:
     temp_df: preformatted and astyped datafrane
     """
     import re
-
+    import streamlit as st
     # extract filename from location
     if ("/" in file) or ("\\" in file):
         filename = file.replace("\\", "/").split("/")[-1]
@@ -67,8 +99,9 @@ def file_formatter(file: str, i: int) -> pd.DataFrame:
     )
 
     # extract sess, assumed to be at end of the filename
-    temp_df["session"] = filename.split("_")[-1].strip(".txt").strip().lower()
-    temp_df["participant"] = filename.split("_")[-2].strip().lower()
+    participant, session =  get_idsess(filename, pattern)
+    temp_df["session"] = session
+    temp_df["participant"] = participant
 
     # reorganize columns
     temp_df = temp_df[
@@ -89,43 +122,10 @@ def file_formatter(file: str, i: int) -> pd.DataFrame:
     )
     
     temp_df['part_sess'] = temp_df['participant'] + '_' + temp_df['session']
-    
     return temp_df
 
 
-def sess_finder(my_list: list) -> list:
-    """
-    Extracts the settings and participant sess from loc/filename.csv, but
-    assumes everything after last '_' is the participant sess.
-
-    TEMP: numbers each sess
-
-    input
-    -----
-    my_list: list
-        List of file locations
-
-    output
-    ------
-    settings: list
-        list of items where each item is the first line of the dynamic bike output
-    sess: list
-        list of participant recordings
-    part: list
-        list of participant names
-    """
-    settings = []
-    sess = []
-    part = []
-    for i in range(len(my_list)):
-        with open(my_list[i]) as f:
-            settings.append(f.readline().strip("\n").lower())
-        part.append(my_list[i].split("_")[-2].lower())
-        sess.append(my_list[i].split("_")[-1].strip(".txt").lower())
-    return settings, sess, part
-
-
-def settings_finder(my_list: list) -> pd.DataFrame:
+def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     """
     Finds the mode, stiffness, and speed settings of the bike
 
@@ -139,11 +139,22 @@ def settings_finder(my_list: list) -> pd.DataFrame:
     """
     import re
 
-    settings, sess, parts = sess_finder(my_list)
-
+    settings = []
+    sess = []
+    parts = []
+    import streamlit as st
+    for i in range(len(my_list)):
+        with open(my_list[i]) as f:
+            settings.append(f.readline().strip("\n").lower())
+        filename = my_list[i].replace('/','\\').split('\\')[-1]
+        part_id, sess_id = get_idsess(filename, pattern) # grab ids with or without custom pattern
+        parts.append(part_id)
+        sess.append(sess_id)
+        
     modes = []
     stiffs = []
     speeds = []
+
     for i in range(len(settings)):
         modes.append(re.findall("([a-z]\w+)\s+mode", settings[i])[0])
         stiffs.append(re.findall("stiffness\s+=\s+(\d+),", settings[i])[0])

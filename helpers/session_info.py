@@ -3,13 +3,14 @@ import pandas as pd                          # dataframe manipulation
 import streamlit as st                       # GUI
 import matplotlib.pyplot as plt              # plot labeling
 
-def app(file_locs):
-    settings = h.settings_finder(file_locs)
+def app(file_locs, pattern:str):
+    settings = h.settings_finder(file_locs, pattern)
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()
+
     for i in range(len(file_locs)):
-        temp_df = h.file_formatter(file_locs[i], i+1)
+        temp_df = h.file_formatter(file_locs[i], i+1, pattern=pattern)
         time_diff = round((temp_df.iloc[-1,2] - temp_df.iloc[0,2]).seconds/60,2)
         df_length = df_length.append(pd.DataFrame({
             'participant':[temp_df['participant'].unique()[0]],
@@ -19,7 +20,15 @@ def app(file_locs):
         df = df.append(temp_df)
     df_info = settings.merge(df_length, on=['participant','session'])
 
-    st.info(""" The table includes some basic information about sessions, including:
+    if not pattern:
+        st.info("""
+        __NOTE__: The script assumes that filenames have id information at the end in the format `xxx000_yyy000.txt` where:
+        * Letters and numbers before the '_' represent participant ID
+        * Letters and numbers after the '_' represent session number
+        * .txt is the file extension
+        """)
+        st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001`")
+    st.write(""" The table includes some basic information about sessions, including:
     * Settings used
     * Total time for each session
     """)

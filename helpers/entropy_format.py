@@ -39,14 +39,14 @@ def facet_grid(x,y,title, dataframe, hue=None, reverse=False, save=False):
     return g
 
 @st.cache()
-def load_dataframe(file_locs):
+def load_dataframe(file_locs, pattern):
     '''
     This function is cached so the dataset won't be reloaded on each run of the script
     '''
     # import and format each bike dataframe
     dataframe = pd.DataFrame()
     for i in range(len(file_locs)):
-        temp_df = h.file_formatter(file_locs[i], i+1)
+        temp_df = h.file_formatter(file_locs[i], i+1, pattern)
         dataframe = dataframe.append(temp_df)
     return dataframe
 
@@ -63,40 +63,12 @@ def cut_dataframe(dataframe, start, end):
         new_df = dataframe.copy()
     return new_df
 
-def get_filename(file_locs, pattern=None):
-    '''
-    Returns a list of filenames, extract from string of location
-    '''
-    import re
-    stripped = [loc.lower().split('dynamic') for loc in file_locs if 'dynamic' in loc]
-    filenames = []
-    nolabels = []
-    for file in file_locs:
-        if ("/" in file) or ("\\" in file):
-            filename = file.replace("\\", "/").split("/")[-1].lower()
-            newname = re.findall('\d{2}_\d{2}_\d{2}_([a-z].+)\.txt$',filename)[0] # extract everything between the time and .txt
-            newname = newname.replace('dynamic','').replace('static','').strip('_') # remove dynamic and static
-            if len(newname) == 0: # if regex didn't find a label, the file was named incorrectly
-                nolabels.append(filename)
-                # NEED TO NOTIFY USER AND STOP SCRIPT
-            else:
-                filenames.append(newname)
-        else:
-            filename = file
-            filenames.append(file)
-    filenames.sort()
-    return filenames
+def app(file_locs, pattern):
+    # all_filenames = h.get_filename(file_locs)
 
-def cut_some_dfs(dataframe, unique_ids):
-    ...
-
-def app(file_locs):
-    df = load_dataframe(file_locs) # run once
-    # pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d\d_session\d\d\d`, where \d represents a digit)")
-    all_filenames = get_filename(file_locs)
-    # st.write(all_filenames)
-    # st.stop()
+    df = load_dataframe(file_locs, pattern) # run once
     st.sidebar.write('--------------------')
+    
     start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)
     end = st.sidebar.number_input("End", min_value=0.0, step=1.0)
     st.sidebar.info("Modify the dataset to eliminate sudden jumps at the beginning or end of the graphs")
@@ -112,10 +84,9 @@ def app(file_locs):
    
     with st.beta_expander('Show current dataset'):
         st.info("This is a dataset of all files in one, save if you want all time series in one file.")
-        save_new_df = st.checkbox("Save table")
-        st.write(new_df)
-        if save_new_df:
-            h.save_dataset(new_df, 'all_in_one.xlsx')
+        preview = new_df.head()
+        st.write(preview)
+
     with st.form('save_results'):
         st.subheader("What should be saved?")
         save_plot = st.checkbox("The plot as it looks now")

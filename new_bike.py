@@ -33,7 +33,6 @@ folder = 'input'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 out_path = dir_path + '\\output'
 file_locs = glob.glob(f"{folder}/*.txt", recursive=True)                               # Make a list of txt files in the folder and subfolders
-
 # Just a basic readme, edit as needed
 if 'homepage' in get_info:
     input_place.empty()
@@ -46,8 +45,8 @@ elif 'matlab' in get_info:
     input_place.empty()
     st.subheader('Editing MatLab Script')
     st.write(f"""
-    1. Double click `entropy_script.m`
-    1. Edit the file at:
+    1. Open the `entropy_script.m` file
+    1. Edit the following lines:
         * Line 17: in quotes: `'{dir_path}'`
         * Line 19: in quotes: `'{out_path}'`
         * Line 22: output filename can be anything but must end in .xls and in quotes: `'entropies.xls'`
@@ -61,10 +60,23 @@ if len(file_locs) < 1:
     st.warning('No ".txt" files found.')
     st.stop()
 
+# Theres a bug where two forms cant be submitted
+# # Ask user for id pattern
+# if st.sidebar.checkbox('Use custom id pattern'):
+#     with st.sidebar.form("submit_patterns"):
+#         id_pattern = st.text_input("What is the id pattern? (ex: `pdbike\d\d`, where \d represents a digit)")
+#         sess_pattern = st.text_input("What is the session pattern? (ex: `day\d\d`, where \d represents a digit)")
+#         pattern={'id':id_pattern, 'sess':sess_pattern}
+#         st.info("Required if participant IDs do not follow the recommended pattern of xxx000_yyy000")
+#         if not st.form_submit_button():
+#             st.stop()
+# else:
+#     pattern=None
+
 if 'overview' in get_info:
     from helpers import session_info
-    session_info.app(file_locs)                                                              # Load session_info app
+    session_info.app(file_locs, pattern=None)                                                              # Load session_info app
 
 elif 'format' in get_info:
     from helpers import entropy_format
-    entropy_format.app(file_locs)                                                            # Load entropy_format 
+    entropy_format.app(file_locs, pattern=None)                                                            # Load entropy_format 
