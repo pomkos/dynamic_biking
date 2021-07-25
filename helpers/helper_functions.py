@@ -2,10 +2,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def get_idsess(filename: str, pattern:str):
-    '''
+
+def get_idsess(filename: str, pattern: str):
+    """
     Returns a list of filenames, extract from string of location
-    '''
+    """
     import re
     import streamlit as st
 
@@ -30,27 +31,30 @@ def get_idsess(filename: str, pattern:str):
         sess = re.findall(f"({pattern['sess']})", filename)[0]
         return my_id, sess
     else:
-        my_id = filename.split('_')[-2].strip('.txt')
-        sess = filename.split('_')[-1].strip('.txt')
+        my_id = filename.split("_")[-2].strip(".txt")
+        sess = filename.split("_")[-1].strip(".txt")
         return my_id, sess
 
-def save_dataset(dataframe, name, extension='xlsx'):
-    '''
+
+def save_dataset(dataframe, name, extension="xlsx"):
+    """
     Function to standardize saving files
-    '''
-    dataframe.to_excel(f'{name}.{extension}', index=False)
+    """
+    dataframe.to_excel(f"{name}.{extension}", index=False)
+
 
 def bar_plot(x, y, title, dataframe, hue=None, save=False):
-    '''
+    """
     Function so streamlit can show it easier
-    '''
+    """
     fig, ax = plt.subplots()
-    g = sns.barplot(x=x, y=y, data=dataframe, hue = hue, ax=ax)
+    g = sns.barplot(x=x, y=y, data=dataframe, hue=hue, ax=ax)
     plt.title(title)
-    plt.xticks(rotation=45, horizontalalignment='right')
+    plt.xticks(rotation=45, horizontalalignment="right")
     if save:
-        plt.savefig('output/bar_plot.png', dpi=300)
+        plt.savefig("output/bar_plot.png", dpi=300)
     return fig
+
 
 def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
@@ -67,6 +71,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
     import re
     import streamlit as st
+
     # extract filename from location
     if ("/" in file) or ("\\" in file):
         filename = file.replace("\\", "/").split("/")[-1]
@@ -99,7 +104,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     )
 
     # extract sess, assumed to be at end of the filename
-    participant, session =  get_idsess(filename, pattern)
+    participant, session = get_idsess(filename, pattern)
     temp_df["session"] = session
     temp_df["participant"] = participant
 
@@ -120,8 +125,8 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     temp_df = temp_df.rename(
         {"power_w": "power_watt", "heart_beat": "heart_rate"}, axis=1
     )
-    
-    temp_df['part_sess'] = temp_df['participant'] + '_' + temp_df['session']
+
+    temp_df["part_sess"] = temp_df["participant"] + "_" + temp_df["session"]
     return temp_df
 
 
@@ -143,14 +148,17 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     sess = []
     parts = []
     import streamlit as st
+
     for i in range(len(my_list)):
         with open(my_list[i]) as f:
             settings.append(f.readline().strip("\n").lower())
-        filename = my_list[i].replace('/','\\').split('\\')[-1]
-        part_id, sess_id = get_idsess(filename, pattern) # grab ids with or without custom pattern
+        filename = my_list[i].replace("/", "\\").split("\\")[-1]
+        part_id, sess_id = get_idsess(
+            filename, pattern
+        )  # grab ids with or without custom pattern
         parts.append(part_id)
         sess.append(sess_id)
-        
+
     modes = []
     stiffs = []
     speeds = []
@@ -179,7 +187,9 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
             "speed": float,
         }
     )
-    settings_df['part_sess'] = settings_df['participant'] + '_' + settings_df['session']
-    settings_df = settings_df[['participant','session','part_sess','mode','stiffness','speed']]
+    settings_df["part_sess"] = settings_df["participant"] + "_" + settings_df["session"]
+    settings_df = settings_df[
+        ["participant", "session", "part_sess", "mode", "stiffness", "speed"]
+    ]
 
     return settings_df
