@@ -24,7 +24,7 @@ if not os.path.exists('output'):
     os.makedirs('output')
 
 get_info = st.sidebar.radio('What should we explore?',                                       # Options in the sidebar
-                            options=['Homepage','Step 1: Overview', 'Step 2: Formatting', 'Step 3: MatLab'],
+                            options=['Homepage','Step 1: Overview', 'Step 2: Formatting', 'Step 3: MatLab', 'Step 4: Graphing'],
                             index=0).lower()
 input_place = st.empty()
 # folder = st.text_input('paste location of files')
@@ -55,6 +55,14 @@ elif 'matlab' in get_info:
     matlab = read_txt_as_str('matlab_instructions')
     st.write(matlab)
     st.stop()
+
+elif 'graphing' in get_info:
+    input_place.empty()
+    st.info('''
+    Explore using the tools below or use SPSS or other software for graphing''')
+    ent_file = st.text_input('Entropy file name', value='entropies.xls')
+    from helpers import entropy_eda
+    entropy_eda.app(ent_file)
 
 if len(file_locs) < 1:
     st.warning('No ".txt" files found.')
