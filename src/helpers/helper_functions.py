@@ -43,7 +43,7 @@ def save_dataset(dataframe, name, extension="xlsx"):
     dataframe.to_excel(f"{name}.{extension}", index=False)
 
 
-def bar_plot(x, y, title, dataframe, hue=None, save=False):
+def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
     """
     Function so streamlit can show it easier
     """
@@ -52,7 +52,7 @@ def bar_plot(x, y, title, dataframe, hue=None, save=False):
     plt.title(title)
     plt.xticks(rotation=45, horizontalalignment="right")
     if save:
-        plt.savefig("output/bar_plot.png", dpi=300)
+        plt.savefig(f"{out_path}/bar_plot.png", dpi=300)
     return fig
 
 

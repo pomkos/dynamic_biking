@@ -9,7 +9,7 @@ def format_options(option: str) -> str:
     return option.title()
 
 
-def grapher(x, y, data, graph, color, save=False):
+def grapher(x, y, data, graph, color, out_path, save=False):
     """
     Uses seaborn to create the requested graph
     """
@@ -29,32 +29,36 @@ def grapher(x, y, data, graph, color, save=False):
     plt.ylabel(format_options(y))
 
     if save:
-        g.savefig(f"output/{graph}_{x}_v_{y}.png", dpi=300)
+        g.savefig(f"{out_path}/{graph}_{x}_v_{y}.png", dpi=300)
     return g
 
 
-def read_entropy_df(filename: str) -> pd.DataFrame:
+def read_entropy_df(filename: str, out_path: str) -> pd.DataFrame:
     """
     Reads in excel file, splits ID column in ID and session
     """
-    df = pd.read_excel(f"output/{filename}")
-    tag = df["ID"].str.split("_", expand=True)
-    tag.columns = ["participant", "session"]
-    df = pd.concat([df, tag], axis=1).rename({"ID": "id_sess"}, axis=1)
-    part_info = ["participant", "session", "id_sess"]
-    df = df[
-        part_info + [col for col in df.columns if col not in part_info]
-    ]  # reorganize
-    return df
+    try:
+        df = pd.read_excel(f"{out_path}/{filename}")
+        tag = df["ID"].str.split("_", expand=True)
+        tag.columns = ["participant", "session"]
+        df = pd.concat([df, tag], axis=1).rename({"ID": "id_sess"}, axis=1)
+        part_info = ["participant", "session", "id_sess"]
+        df = df[
+            part_info + [col for col in df.columns if col not in part_info]
+        ]  # reorganize
+        return df
+    except:
+        st.error("entropies.xls not found in the output folder")
+        st.stop()
 
 
-def app(filename: str):
+def app(filename: str, out_path:str):
     """
     Helps create some simple graphs using the entropies.xls file created by the MatLab script.
     """
     from helpers import helper_functions as h
 
-    df = read_entropy_df(filename)
+    df = read_entropy_df(filename, out_path)
     st.write(df)
 
     st.write("## Graphing")
@@ -83,7 +87,7 @@ def app(filename: str):
         "Graph type", options=graph_options, index=default, format_func=format_options
     )
 
-    st.pyplot(grapher(x, y, df, graph, hue))
+    st.pyplot(grapher(x, y, df, graph, hue, out_path))
 
     with st.form("graphing"):
         save_graph = st.checkbox("Save graph as it is now")
@@ -94,9 +98,9 @@ def app(filename: str):
 
     try:
         if save_graph:
-            grapher(x, y, df, graph, hue, save=True)
+            grapher(x, y, df, graph, hue, out_path, save=True)
         if save_table:
-            h.save_dataset(df, "output/entropies_id_separated")
+            h.save_dataset(df, f"{out_path}/entropies_id_separated", extension='xls')
 
         st.success("Saved!")
     except:

@@ -4,7 +4,7 @@ import streamlit as st  # GUI
 import matplotlib.pyplot as plt  # plot labeling
 
 
-def app(file_locs, pattern: str):
+def app(file_locs, out_path:str, pattern: str):
     settings = h.settings_finder(file_locs, pattern)
     # import and format each bike dataframe
     df = pd.DataFrame()
@@ -47,6 +47,7 @@ def app(file_locs, pattern: str):
         "participant",
         "length_minutes",
         dataframe=df_info,
+        out_path=out_path,
         title="Average length of sessions per participant",
     )
     plt.xlabel("Participant Code")
@@ -67,12 +68,13 @@ def app(file_locs, pattern: str):
 
     if save:
         if save_df_info:
-            h.save_dataset(df_info, "output/session_info", extension="xls")
+            h.save_dataset(df_info, f"{out_path}/session_info", extension="xls")
         if save_plot:
             h.bar_plot(
                 "participant",
                 "length_minutes",
                 dataframe=df_info,
+                out_path=out_path,
                 title="Length of each session",
                 save=True,
             )

@@ -6,7 +6,7 @@ import seaborn as sns  # create plot
 from stqdm import stqdm  # progress bar
 
 
-def save_as_files(dataframe: pd.DataFrame, save_form) -> None:
+def save_as_files(dataframe: pd.DataFrame, out_path, save_form) -> None:
     """
     Save all unique participants (code) as a separate xlsx file,
     formatted for MatLab.
@@ -29,10 +29,10 @@ def save_as_files(dataframe: pd.DataFrame, save_form) -> None:
             "Power",
             "ID",
         ]  # format col name for Matlab
-        h.save_dataset(temp_df, f"output/{p}")
+        h.save_dataset(temp_df, f"{out_path}/{p}")
 
 
-def facet_grid(x, y, title, dataframe, hue=None, reverse=False, save=False):
+def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=False):
     """
     Returns a figure for streamlit. Creates facet grid
     using participant and session columns
@@ -48,7 +48,7 @@ def facet_grid(x, y, title, dataframe, hue=None, reverse=False, save=False):
     )
     g.fig.suptitle(title, y=1)
     if save:
-        g.savefig("output/facet_grid.png", dpi=300)
+        g.savefig(f"{out_path}/facet_grid.png", dpi=300)
     return g
 
 
@@ -79,7 +79,7 @@ def cut_dataframe(dataframe, start, end):
     return new_df
 
 
-def app(file_locs, pattern):
+def app(file_locs, pattern, in_path, out_path):
     # all_filenames = h.get_filename(file_locs)
 
     df = load_dataframe(file_locs, pattern)  # run once
@@ -104,6 +104,7 @@ def app(file_locs, pattern):
             x="seconds_elapsed",
             y="speed_rpm",
             dataframe=new_df,  # run if parameters are changed
+            out_path=out_path,
             title="Cadence over time",
             reverse=reverse,
         )
@@ -136,12 +137,13 @@ def app(file_locs, pattern):
                 x="seconds_elapsed",
                 y="speed_rpm",
                 dataframe=new_df,  # run if parameters are changed
+                out_path=out_path,
                 title="Cadence over time",
                 reverse=reverse,
                 save=True,
             )
         if save_all_in_one:
-            h.save_dataset(new_df, "all_sessions")
+            h.save_dataset(new_df, f"{out_path}/all_sessions", extension='xls')
         if save_matlab:
-            save_as_files(new_df, save_form)
+            save_as_files(new_df, out_path, save_form)
         save_form.success("Saved!")

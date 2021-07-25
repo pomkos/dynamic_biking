@@ -3,14 +3,14 @@
 ::                 Peter Gates; July 24, 2021 ::
 
 @ECHO OFF
+cd ./src
 
 :: Grab user name from new_bike.config
-findstr /V "#" new_bike.config >new_bike.tmpcfg
-set /p user= < new_bike.tmpcfg
-del new_bike.tmpcfg
+set user=%username%
+set conda=anaconda3
 
 :: Run anaconda 
-CALL C:\Users\%user%\anaconda3\Scripts\activate.bat C:\Users\%user%\anaconda3
+CALL C:\Users\%user%\%conda%\Scripts\activate.bat C:\Users\%user%\%conda%
 
 echo.
 echo "-------------------------------------"

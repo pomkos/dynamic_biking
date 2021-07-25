@@ -1,13 +1,18 @@
+cd ./src
+
 :: This file installs or reinstalls the required python libraries for dynamic bike script to run
 :: Last edited by:
 ::                 Peter Gates; July 24, 2021 ::
 
 @ECHO OFF
-
-SET /p response="Which conda is installed? (anaconda/miniconda/neither): "
-if %response%==anaconda GOTO conda
-if %response%==miniconda GOTO mini
-if %response%==neither GOTO instructions
+ECHO "Which conda is installed?"
+echo "1: anaconda"
+echo "2: miniconda"
+echo "3: neither"
+SET /p response="Choice: (1, 2, or 3) "
+if %response%==1 GOTO conda
+if %response%==2 GOTO mini
+if %response%==3 GOTO instructions
 :eof
 
 :: ------------------------ INITIATION SECTION ------------------------ ::
@@ -32,7 +37,7 @@ if %cntn%=="Y" GOTO mini else ECHO "Please contact technical support"
 
 :: ------------------------ ANACONDA SECTION ------------------------ ::
 :conda
-SET /p user="What is the windows username? "
+set user=%username%
 
 :: EDIT ME ::
 :: Edit the below line to point to the anaconda directory as demonstrated below ::
@@ -56,9 +61,7 @@ EXIT
 
 :: ------------------------ MINICONDA SECTION ------------------------ ::
 :mini
-SET /p user="What is the windows username? "
-:: Store the username in new_bike.config
-echo %user% > "new_bike.config"
+set user=%username%
 
 CALL C:\Users\%user%\miniconda3\Scripts\activate.bat C:\Users\%user%\miniconda3
 :: This line installs everything in the requirements.txt file ::
@@ -69,7 +72,7 @@ echo "-------------------------------------"
 echo "Required libraries installed."
 echo "-------------------------------------"
 echo.
-echo "Please open start_me.bat"
+echo "Opening start_me.bat"
 echo.
 :: This line keeps the terminal open ::
 PAUSE

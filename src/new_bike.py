@@ -24,10 +24,10 @@ def read_txt_as_str(filename: str) -> str:
 
 
 # Create input/output folders
-if not os.path.exists("input"):
-    os.makedirs("input")
-if not os.path.exists("output"):
-    os.makedirs("output")
+if not os.path.exists("../input"):
+    os.makedirs("../input")
+if not os.path.exists("../output"):
+    os.makedirs("../output")
 
 get_info = st.sidebar.radio(
     "What should we explore?",  # Options in the sidebar
@@ -42,14 +42,15 @@ get_info = st.sidebar.radio(
 ).lower()
 input_place = st.empty()
 # folder = st.text_input('paste location of files')
-folder = "input"
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-out_path = dir_path + "\\output"
+dir_path = os.path.dirname(os.path.realpath(__file__)).strip('src')
+in_path = "..\\input"
+out_path = "..\\output"
 file_locs = glob.glob(
-    f"{folder}/*.txt", recursive=True
+    f"{in_path}/*.txt", recursive=True
 )  # Make a list of txt files in the folder and subfolders
 # Just a basic readme, edit as needed
+
 if "homepage" in get_info:
     input_place.empty()
     st.write(
@@ -65,20 +66,10 @@ elif "matlab" in get_info:
     st.write(
         f"""
     1. Open the `entropy_script.m` file
-    1. Edit the following lines:
-        * Line 17: in quotes: `'{dir_path}'`
-        * Line 19: in quotes: `'{out_path}'`
-        * Line 22: output filename can be anything but must end in .xls and in quotes: `'entropies.xls'`
+    1. Click the green `▶` "Run" button under "Editor" tab
     """
     )
     with st.beta_expander("Example of Step 2"):
-        st.image("images/matlab_code.png")
-    st.write(
-        """
-    3. Click the green `▶` "Run" button under "Editor" tab
-    """
-    )
-    with st.beta_expander("Example of Step 3"):
         st.image("images/matlab_menu.png")
     matlab = read_txt_as_str("matlab_troubleshooting")
 
@@ -102,7 +93,7 @@ elif "graphing" in get_info:
     ent_file = st.text_input("Entropy file name", value="entropies.xls")
     from helpers import entropy_eda
 
-    entropy_eda.app(ent_file)
+    entropy_eda.app(ent_file, out_path)
 
 if len(file_locs) < 1:
     st.warning('No ".txt" files found.')
@@ -124,9 +115,9 @@ if len(file_locs) < 1:
 if "overview" in get_info:
     from helpers import session_info
 
-    session_info.app(file_locs, pattern=None)  # Load session_info app
+    session_info.app(file_locs, out_path, pattern=None,)  # Load session_info app
 
 elif "format" in get_info:
     from helpers import entropy_format
 
-    entropy_format.app(file_locs, pattern=None)  # Load entropy_format
+    entropy_format.app(file_locs, pattern=None, in_path=in_path, out_path=out_path)  # Load entropy_format
