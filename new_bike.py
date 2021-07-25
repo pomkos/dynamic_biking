@@ -50,10 +50,23 @@ elif 'matlab' in get_info:
         * Line 17: in quotes: `'{dir_path}'`
         * Line 19: in quotes: `'{out_path}'`
         * Line 22: output filename can be anything but must end in .xls and in quotes: `'entropies.xls'`
-    1. Click the green `▶` "Run" button under "Editor" tab
     """)
-    matlab = read_txt_as_str('matlab_instructions')
+    with st.beta_expander('Example of Step 2'):
+        st.image('images/matlab_code.png')
+    st.write("""
+    3. Click the green `▶` "Run" button under "Editor" tab
+    """)
+    with st.beta_expander('Example of Step 3'):
+        st.image('images/matlab_menu.png')
+    matlab = read_txt_as_str('matlab_troubleshooting')
+
     st.write(matlab)
+    with st.beta_expander("Error solution"):
+        st.image('images/matlab_error.png')
+
+    st.write('''### Retrieving Entropy Results
+All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
+    ''')
     st.stop()
 
 elif 'graphing' in get_info:

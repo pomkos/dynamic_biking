@@ -75,7 +75,7 @@ def app(file_locs, pattern):
 
     new_df = cut_dataframe(df, start, end).copy() # run if the start/end values are changed
     st.subheader("Are there any sudden jumps?")
-    st.write("Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets.")
+    st.info("Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets.")
     reverse = st.checkbox("Columns as participants")
     with st.spinner("Loading facet grid plot"):
         plot = facet_grid(x='seconds_elapsed',y='speed_rpm', dataframe=new_df ,   # run if parameters are changed

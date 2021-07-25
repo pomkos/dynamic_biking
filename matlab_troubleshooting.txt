@@ -22,6 +22,3 @@ Change the MATLAB current folder or add its folder to the MATLAB path.
 Error in apsamen_cleaned (line 61)
          [ap(n,num),  sam(n,num)]  = ApSamEn(data1(N1:N2,num),2,0.2*std1(num),n);
 ```
-
-### Retrieving Entropy Results
-All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
