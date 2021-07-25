@@ -14,7 +14,6 @@ IF EXIST %USERPROFILE%\anaconda3\ (
 IF EXIST %USERPROFILE%\miniconda3\ (
     set conda=miniconda3
 )
-ECHO %conda%
 
 CALL %USERPROFILE%\%conda%\Scripts\activate.bat %USERPROFILE%\%conda%
 
