@@ -1,0 +1,8 @@
+pandas       # dataset handling
+seaborn      # plotting facetgrid
+streamlit    # webgui for script
+matplotlib   # labeling x/y axis
+stqdm        # progress bar
+openpyxl     # saving excel files
+xlwt         # handling xls files
+xlrd         # opening excel files
