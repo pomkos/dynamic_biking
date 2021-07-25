@@ -1,10 +1,9 @@
-cd ./src
-
 :: This file installs or reinstalls the required python libraries for dynamic bike script to run
 :: Last edited by:
 ::                 Peter Gates; July 24, 2021 ::
 
 @ECHO OFF
+cd ./src
 ECHO "Which conda is installed?"
 echo "1: anaconda"
 echo "2: miniconda"
@@ -37,11 +36,9 @@ if %cntn%=="Y" GOTO mini else ECHO "Please contact technical support"
 
 :: ------------------------ ANACONDA SECTION ------------------------ ::
 :conda
-set user=%username%
-
 :: EDIT ME ::
 :: Edit the below line to point to the anaconda directory as demonstrated below ::
-CALL C:\Users\%user%\anaconda3\Scripts\activate.bat C:\Users\%user%\anaconda3
+CALL %USERPROFILE%\anaconda3\Scripts\activate.bat %USERPROFILE%\%user%\anaconda3
 :: This line installs everything in the requirements.txt file ::
 pip install -r requirements.txt --upgrade
 
@@ -61,9 +58,7 @@ EXIT
 
 :: ------------------------ MINICONDA SECTION ------------------------ ::
 :mini
-set user=%username%
-
-CALL C:\Users\%user%\miniconda3\Scripts\activate.bat C:\Users\%user%\miniconda3
+CALL %USERPROFILE%\miniconda3\Scripts\activate.bat %USERPROFILE%\miniconda3
 :: This line installs everything in the requirements.txt file ::
 pip install -r requirements.txt --upgrade
 
@@ -72,7 +67,7 @@ echo "-------------------------------------"
 echo "Required libraries installed."
 echo "-------------------------------------"
 echo.
-echo "Opening start_me.bat"
+echo "Open start_me.bat"
 echo.
 :: This line keeps the terminal open ::
 PAUSE

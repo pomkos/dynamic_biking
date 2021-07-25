@@ -6,11 +6,17 @@
 cd ./src
 
 :: Grab user name from new_bike.config
-set user=%username%
-set conda=anaconda3
 
-:: Run anaconda 
-CALL C:\Users\%user%\%conda%\Scripts\activate.bat C:\Users\%user%\%conda%
+:: Run conda
+IF EXIST %USERPROFILE%\anaconda3\ (
+    set conda=anaconda3
+)
+IF EXIST %USERPROFILE%\miniconda3\ (
+    set conda=miniconda3
+)
+ECHO %conda%
+
+CALL %USERPROFILE%\%conda%\Scripts\activate.bat %USERPROFILE%\%conda%
 
 echo.
 echo "-------------------------------------"
