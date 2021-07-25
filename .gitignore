@@ -1,3 +1,14 @@
+# MatLab Data
+*.m
+*.c
+*.mexw64
+
+# Bike or script data
+*.txt
+*.xlsx
+*.xls
+*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
