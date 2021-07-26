@@ -34,7 +34,7 @@ This repo does not contain the MatLab scripts required for ApEn, SamEn, and Spec
 # Expected file layout
 
 ```
-dynamic_biking
+dynamic_biking                          # place entropy_script.m in here
     |-- .gitignore                      # list of file extensions that will not be uploaded to github
     |-- README.md                       # this readme file
     |-- [0] install.bat                 # run first, guides user through conda and pip installation
