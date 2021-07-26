@@ -39,7 +39,7 @@ dynamic_biking
     |-- README.md                       # this readme file
     |-- [0] install.bat                 # run first, guides user through conda and pip installation
     |-- [1] start_me.bat                # runs the main script
-    |-- entropy_script.m                # place entropy_script.m in root folder
+    |-- entropy_script.m                # loops through bike files and uses matlab scripts to calculate entropies
     |-- src
         |-- homepage.txt                # edit to update instructions on the homepage
         |-- matlab_troubleshooting.txt  # edit to add solutions to problems encountered in matlab
@@ -55,7 +55,7 @@ dynamic_biking
             |-- matlab_error.png
             |-- matlab_menu.png
         |-- matlab                      # place all other matlab scripts in here
-            |-- ApSamEn.m
-            |-- Convert_Data.m
-            |-- MatchCounter.c
+            |-- ApSamEn.m               # code for entropy calculation
+            |-- Convert_Data.m          # not sure what this does
+            |-- MatchCounter.c          # will create MatchCounter.mexw64 on each run
 ```
