@@ -56,6 +56,6 @@ dynamic_biking
             |-- matlab_menu.png
         |-- matlab                      # place all other matlab scripts in here
             |-- ApSamEn.m
-            |-- Mex.c
-            |--
+            |-- Convert_Data.m
+            |-- MatchCounter.c
 ```
