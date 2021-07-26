@@ -29,4 +29,33 @@ The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW co
 
 # Notes
 
-This repo does not contain the MatLab scripts required for ApEn, SamEn, and SpecEn analysis of dynamic bike cadence. The scripts contained in this repo are self contained, but the MatLab scripts must be moved to the `dynamic_biking` folder before entropy analysis can proceed. 
+This repo does not contain the MatLab scripts required for ApEn, SamEn, and SpecEn analysis of dynamic bike cadence. The scripts contained in this repo are self contained, but all MatLab scripts must be moved to the `dynamic_biking/src/matlab` folder, with the exception of `entropy_script.m` that should be moved to the `dynamic_biking` folder, before entropy analysis can proceed. 
+
+# Expected file layout
+
+```
+dynamic_biking
+    |-- .gitignore                      # list of file extensions that will not be uploaded to github
+    |-- README.md                       # this readme file
+    |-- [0] install.bat                 # run first, guides user through conda and pip installation
+    |-- [1] start_me.bat                # runs the main script
+    |-- entropy_script.m                # place entropy_script.m in root folder
+    |-- src
+        |-- homepage.txt                # edit to update instructions on the homepage
+        |-- matlab_troubleshooting.txt  # edit to add solutions to problems encountered in matlab
+        |-- new_bike.py                 # main script that runs each script as needed
+        |-- requirements.txt            # contains libraries required by all scripts
+        |-- helpers
+            |-- entropy_eda.py          # script for step 4
+            |-- entropy_format.py       # script for step 2
+            |-- helper_functions.py     # contains various functions used by all steps
+            |-- session_info.py         # script for step 1
+        |-- images                      # contains screenshots used in step 3
+            |-- matlab_code.png
+            |-- matlab_error.png
+            |-- matlab_menu.png
+        |-- matlab                      # place all other matlab scripts in here
+            |-- ApSamEn.m
+            |-- Mex.c
+            |--
+```
