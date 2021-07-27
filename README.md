@@ -7,6 +7,10 @@ This repo was created to share the code used to create the entropy analysis work
 * Interactive clipping of datasets of dramatic jumps in cadence
 * Conversion of dynamic files to be used with the MatLab entropy scripts
 
+Screenshot of the first page with general instructions for each step.
+
+![image](https://github.com/pomkos/dynamic_biking/raw/main/Screen%20Shot%202021-07-27%20at%2010.04.26.png)
+
 # Instructions
 
 1. Run `install.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
