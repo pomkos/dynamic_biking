@@ -3,6 +3,10 @@
 1. [Background](#background)
 2. [Instructions](#instructions)
 3. [MatLab Script Instructions](#matlab_script)
+    1. [MinGW Addon](#mingw_addon)
+    2. [Signal Processing Toolbox addon](#signal_processing_toolbox)
+1. [Notes](#notes)
+2. [Expected File Layout](expected_file_layout)
 
 # Background
 
