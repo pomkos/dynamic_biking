@@ -1,3 +1,7 @@
+# Table of Contents
+
+1. [Background](#background)
+
 # Background
 
 This repo was created to share the code used to create the entropy analysis workflow. Features include:
