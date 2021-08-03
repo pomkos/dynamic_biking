@@ -174,7 +174,8 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
         if 'dynamic' in set:
             setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
         else: # static does not have speed setting
-            setting_speed = 'NA'        
+            import numpy as np
+            setting_speed = np.nan       
         speeds.append(setting_speed)
     settings_df = pd.DataFrame(
         {
@@ -192,7 +193,7 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
             "session": "object",
             "mode": "object",
             "stiffness": float,
-            "speed": "object",
+            "speed": float,
         }
     )
     settings_df["part_sess"] = settings_df["participant"] + "_" + settings_df["session"]
