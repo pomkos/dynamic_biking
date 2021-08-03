@@ -45,23 +45,23 @@ The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW co
 
 If SpecEn analysis is not needed, the Signal Processing Toolbox does not need to be installed. In that case the MatLab script needs to be modified:
 
-Prevent the script from creating SpecEn columns:
+__Prevent the script from creating SpecEn columns:__
 
 1. `Line 27`: delete `spec_HR` but leave the `,...` at the end
 2. `Line 28`: delete`spec_Cadence` but leave the `,...` at the end
 3. `Line 29`: delete `spec_Power` but leave the `};` at the end
 
-Prevent the script from calculating SpecEn:
+__Prevent the script from calculating SpecEn:__
 
 1. `Lines 67 - 71`: add `%`
 
-Prevent the script from looking for SpecEn columns:
+__Prevent the script from looking for SpecEn columns:__
 
 1. `Line 73`: replace `cell(1,18);` with `cell(1,15);`
 2. Delete entire `Lines 81, 86, 91` that end with `spec(number);`
 3. Renumber `Lines 74 - end` so that `res_day1{1,num}` are sequential each line
 
-Run the script and it should work without the need for Signal Processing Toolbox, with the tradeoff that SpecEn will not be calculated.
+Run the script and it should work without the need for Signal Processing Toolbox, with the tradeoff that SpecEn will not be calculated
 
 # Notes
 
