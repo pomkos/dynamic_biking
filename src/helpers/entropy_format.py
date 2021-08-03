@@ -57,7 +57,7 @@ def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=F
     return g
 
 
-@st.cache()
+@st.cache(suppress_st_warning=True)
 def load_dataframe(file_locs, pattern):
     """
     This function is cached so the dataset won't be reloaded on each run of the script
