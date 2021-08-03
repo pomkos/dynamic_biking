@@ -8,19 +8,29 @@ st.set_page_config(
 st.title("Dynamic Bike Script")  # Title on main page
 
 
-def read_txt_as_str(filename: str) -> str:
+def read_txt_as_str(filename: str, extension: str) -> str:
     """
     Loads txt files, returns contents as string
     """
-    contents = ""
-    with open(
-        f"{filename}.txt", "r"
-    ) as f:  # so people can edit instructions without seeing code
-        for line in f.readlines():
-            # the "@" is reserved for commenting within the text file
-            if line[0] != "@":
+    if 'README' in filename:
+        st.info("Entropy analysis requires the following two addons.")
+        contents = ""
+        f = open(f"{filename}.{extension}", "r")
+        lines_to_read = [i for i in range(40, 78)]
+        for position, line in enumerate(f):
+            if position in lines_to_read:
                 contents += line
-    return contents
+        return contents
+    else:
+        contents = ""
+        with open(
+            f"{filename}.{extension}", "r"
+        ) as f:  # so people can edit instructions without seeing code
+            for line in f.readlines():
+                # the "@" is reserved for commenting within the text file
+                if line[0] != "@":
+                    contents += line
+        return contents
 
 
 # Create input/output folders
@@ -36,7 +46,7 @@ get_info = st.sidebar.radio(
         "Step 1: Overview",
         "Step 2: Formatting",
         "Step 3: MatLab",
-        "Step 4: Graphing",
+        "Step 4: View Results",
     ],
     index=0,
 ).lower()
@@ -56,13 +66,13 @@ if "homepage" in get_info:
     st.write(
         "Welcome to the Dynamic Bike Script :bike:! This script was created to make entropy analysis more accurate and less prone to human error."
     )
-    homepage = read_txt_as_str("homepage")
+    homepage = read_txt_as_str("homepage", 'txt')
     st.write(homepage)
     st.stop()
 
 elif "matlab" in get_info:
     input_place.empty()
-    st.write("## Running MatLab Script")
+    st.write("### Running MatLab Script")
     st.write(
         f"""
     1. Open the `entropy_script.m` file
@@ -71,11 +81,19 @@ elif "matlab" in get_info:
     )
     with st.beta_expander("Example of Step 2"):
         st.image("images/matlab_menu.png")
-    matlab = read_txt_as_str("matlab_troubleshooting")
-
+    st.write(
+        """### Retrieving Entropy Results
+All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
+    """
+    )
+    matlab = read_txt_as_str("matlab_troubleshooting",'txt')
+    st.write('### Installation')
+    with st.beta_expander('MatLab Setup Instructions'):
+        matlab_install = read_txt_as_str('../README','md')
+        st.write(matlab_install)
     st.write(matlab)
 
-    st.write("""### ApSamEn not found in current folder
+    st.write("""#### ApSamEn not found in current folder
 In case the error below appears, click `add its folder to the MATLAB path` and run the script again
 
 ```
@@ -94,15 +112,9 @@ Error in apsamen_cleaned (line 61)
     with st.beta_expander("Error solution"):
         st.image("images/matlab_error.png")
     
-
-    st.write(
-        """## Retrieving Entropy Results
-All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
-    """
-    )
     st.stop()
 
-elif "graphing" in get_info:
+elif "result" in get_info:
     input_place.empty()
     st.info(
         """
@@ -114,7 +126,7 @@ elif "graphing" in get_info:
     entropy_eda.app(ent_file, out_path)
 
 if len(file_locs) < 1:
-    st.warning('No ".txt" files found. Make sure all files are in the input folder.')
+    st.warning('No ".txt" files found. Make sure all files are in the "input" folder, not a subdirectory.')
     st.stop()
 
 # Theres a bug where two forms cant be submitted

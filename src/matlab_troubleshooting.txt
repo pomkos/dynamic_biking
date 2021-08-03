@@ -7,8 +7,8 @@
 @@@@@@
 
 
-## Troubleshooting
+### Troubleshooting
 
-### Cannot find file error
+#### Cannot find file error
 
 Make sure the sidebar of MatLab shows the contents of the `dynamic_biking` folder, not the `input` or other folders, before pressing `run`.
