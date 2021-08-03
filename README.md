@@ -1,6 +1,8 @@
 # Table of Contents
 
 1. [Background](#background)
+2. [Instructions](#instructions)
+3. [MatLab Script Instructions](#matlab_script)
 
 # Background
 
