@@ -13,14 +13,14 @@ def save_as_files(dataframe: pd.DataFrame, out_path, save_form) -> None:
     """
     import datetime as dt
 
-    p_sess = list(dataframe["part_sess"].unique())
+    p_sess = list(dataframe["id_sess"].unique())
     num_sess = len(p_sess)
     dataframe["date_"] = dataframe["date"].apply(lambda x: x.date())
     for i in stqdm(range(num_sess)):
         p = p_sess[i]
-        temp_df = dataframe[(dataframe["part_sess"] == p)]
+        temp_df = dataframe[(dataframe["id_sess"] == p)]
         temp_df = temp_df[
-            ["date", "heart_rate", "speed_rpm", "power_watt", "part_sess"]
+            ["date", "heart_rate", "speed_rpm", "power_watt", "id_sess"]
         ]  # select approp cols, order for Matlab
         temp_df.columns = [
             "Date",
@@ -29,7 +29,11 @@ def save_as_files(dataframe: pd.DataFrame, out_path, save_form) -> None:
             "Power",
             "ID",
         ]  # format col name for Matlab
-        h.save_dataset(temp_df, f"{out_path}/{p}")
+        try:
+            h.save_dataset(temp_df, f"{out_path}/{p}")
+        except PermissionError as p_error:
+            st.error(f"Can't save the file, is `{p}`.xlsx open somewhere?")
+            st.stop()
 
 
 def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=False):
@@ -43,6 +47,7 @@ def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=F
     else:
         row = "participant"
         col = "session"
+    st.write(f"__NOTE:__ Columns are {col} and rows {row} IDs")
     g = sns.relplot(
         x=x, y=y, data=dataframe, row=row, col=col, facet_kws={"sharex": False}
     )

@@ -126,7 +126,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         {"power_w": "power_watt", "heart_beat": "heart_rate"}, axis=1
     )
 
-    temp_df["part_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+    temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
     return temp_df
 
 
@@ -168,15 +168,17 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
         set = settings[i] # one setting line
 
         bike_mode = re.findall("([a-z]\w+)\s+mode", set)[0]
-        setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
         modes.append(bike_mode)
-        stiffs.append(setting_stiffness)
         if 'dynamic' in set:
             setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
-        else: # static does not have speed setting
+            setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
+        else: # static mode does not have speed setting
             import numpy as np
-            setting_speed = np.nan       
+            setting_speed = np.nan
+            setting_stiffness = re.findall("stiffness\s+=\s+(\d+)", set)[0]
         speeds.append(setting_speed)
+        stiffs.append(setting_stiffness)
+
     settings_df = pd.DataFrame(
         {
             "participant": parts,
@@ -196,9 +198,9 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
             "speed": float,
         }
     )
-    settings_df["part_sess"] = settings_df["participant"] + "_" + settings_df["session"]
+    settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
     settings_df = settings_df[
-        ["participant", "session", "part_sess", "mode", "stiffness", "speed"]
+        ["participant", "session", "id_sess", "mode", "stiffness", "speed"]
     ]
 
     return settings_df

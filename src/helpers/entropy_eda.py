@@ -17,6 +17,9 @@ def grapher(x, y, data, graph, color, out_path, save=False):
     import matplotlib.pyplot as plt
 
     graph = graph.strip("plot").strip()
+    if 'facet' in graph:
+        st.error("Not yet supported")
+        st.stop()
     if ("bar" in graph) | ("box" in graph):
         g = sns.catplot(x=x, y=y, data=data, kind=graph, hue=color)
         plt.xticks(rotation=45, horizontalalignment="right")
@@ -48,7 +51,7 @@ def read_entropy_df(filename: str, out_path: str) -> pd.DataFrame:
         ]  # reorganize
         return df
     except:
-        st.error("entropies.xls not found in the output folder")
+        st.error(f"{filename} not found in the output folder")
         st.stop()
 
 
@@ -58,24 +61,42 @@ def app(filename: str, out_path:str):
     """
     from helpers import helper_functions as h
 
-    df = read_entropy_df(filename, out_path)
+    df_ent = read_entropy_df(filename, out_path) # entropy df
+    df_sess = pd.read_excel(f'{out_path}/session_info.xls') # session info df
+    df_sess = df_sess.astype({
+        'participant':str,
+        'session':str,
+        'id_sess':str,
+        'mode':str,
+    })
+    
+    df = df_sess.merge(df_ent, suffixes=('_step2','_matlab'))
+    st.info(f"The table below was created by merging the file created in Step 2 and {filename}")
     st.write(df)
 
     st.write("## Graphing")
     graph_options = ["bar plot", "box plot", "scatterplot", "facet grid"]
+    
+    cat_options = ['participant', 'session', 'id_sess', 'mode' , 'speed', 'stiffness'] # categorical variables
+    num_options = [col for col in df.columns if col not in cat_options] # numerical variables
+    num_options.sort()
+
+    all_options = cat_options + num_options
+    
+    color_options = ['Nothing'] + cat_options
+
     colx, coly = st.beta_columns(2)
     with colx:
-        x = st.selectbox("X axis", options=df.columns, format_func=format_options)
+        x = st.selectbox("X axis", options=all_options, format_func=format_options, index=1)
     with coly:
         y = st.selectbox(
-            "Y axis", options=df.columns, index=13, format_func=format_options
+            "Y axis", options=all_options, format_func=format_options, index=6
         )
 
-    color = st.checkbox("Color by session")
-    if color:
-        hue = "session"
-    else:
+    hue = st.selectbox("Color by", options=color_options, format_func=format_options)
+    if hue == 'Nothing':
         hue = None
+
     if df[x].dtype == "O":
         # if selected column is string/object, barplot is default
         default = 0
@@ -91,18 +112,17 @@ def app(filename: str, out_path:str):
 
     with st.form("graphing"):
         save_graph = st.checkbox("Save graph as it is now")
-        save_table = st.checkbox("Save dataframe with separated id and sessions")
+        save_table = st.checkbox("Save dataframe with separated id and sessions", value=True)
 
         if not st.form_submit_button():
             st.stop()
 
-    try:
-        if save_graph:
-            grapher(x, y, df, graph, hue, out_path, save=True)
-        if save_table:
-            h.save_dataset(df, f"{out_path}/entropies_id_separated", extension='xls')
-
-        st.success("Saved!")
-    except:
-        st.error("Something happened, did not save")
-        st.stop()
+    if save_graph:
+        grapher(x, y, df, graph, hue, out_path, save=True)
+    if save_table:
+        try:
+            h.save_dataset(df, f"{out_path}/entropies_plus", extension='xls')
+        except PermissionError as p_error:
+            st.error("Can't save the dataset, is `entropies_plus.xls` open somewhere?")
+            st.stop()
+    st.success("Saved!")

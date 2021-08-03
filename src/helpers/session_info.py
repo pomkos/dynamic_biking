@@ -57,18 +57,22 @@ def app(file_locs, out_path:str, pattern: str):
 
     with save_form:
         st.subheader("What should be saved?")
+        save_plot = st.checkbox("The plot as it looks now")
         save_df_info = st.checkbox(
             "The table as an excel file (required for MatLab entropy script)",
             value=True,
         )
-        save_plot = st.checkbox("The plot as it looks now")
         save = st.form_submit_button("Save")
         save_form = st.empty()
         save_form.info("All selected items will be saved in the 'output' folder")
 
     if save:
         if save_df_info:
-            h.save_dataset(df_info, f"{out_path}/session_info", extension="xls")
+            try:
+                h.save_dataset(df_info, f"{out_path}/session_info", extension="xls")
+            except PermissionError as p:
+                st.error("Can't save the dataset, is `session_info.xls` open somewhere?")
+                st.stop()
         if save_plot:
             h.bar_plot(
                 "participant",

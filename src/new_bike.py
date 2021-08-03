@@ -62,7 +62,7 @@ if "homepage" in get_info:
 
 elif "matlab" in get_info:
     input_place.empty()
-    st.subheader("Editing MatLab Script")
+    st.write("## Running MatLab Script")
     st.write(
         f"""
     1. Open the `entropy_script.m` file
@@ -75,7 +75,7 @@ elif "matlab" in get_info:
 
     st.write(matlab)
 
-    st.write("""#### ApSamEn not found in current folder
+    st.write("""### ApSamEn not found in current folder
 In case the error below appears, click `add its folder to the MATLAB path` and run the script again
 
 ```
@@ -96,7 +96,7 @@ Error in apsamen_cleaned (line 61)
     
 
     st.write(
-        """### Retrieving Entropy Results
+        """## Retrieving Entropy Results
 All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
     """
     )
@@ -114,7 +114,7 @@ elif "graphing" in get_info:
     entropy_eda.app(ent_file, out_path)
 
 if len(file_locs) < 1:
-    st.warning('No ".txt" files found.')
+    st.warning('No ".txt" files found. Make sure all files are in the input folder.')
     st.stop()
 
 # Theres a bug where two forms cant be submitted
