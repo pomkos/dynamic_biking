@@ -6,7 +6,7 @@
     1. [MinGW Addon](#mingw_addon)
     2. [Signal Processing Toolbox addon](#signal_processing_toolbox)
 1. [Notes](#notes)
-2. [Expected File Layout](expected_file_layout)
+2. [Expected File Layout](#expected_file_layout)
 
 # Background
 
