@@ -19,10 +19,13 @@ Screenshot of the first page with general instructions for each step.
 4. `Step 1`: Click save at the bottom of the page
 5. `Step 2`: Clip files as needed, then click save at the bottom of the page
 6. `Step 3`: Follow instructions to edit and run MatLab script
+7. `Step 4`: Basic data exploration, optional
 
 # MatLab script
 
-The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW compiler. This requires logging into MatLab using an account.
+The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW compiler (all entropy analysis) and the Signal Processing Toolbox (SpecEn analysis only). This requires logging into MatLab using an account.
+
+## MinGW compiler
 
 1. Open MatLab
 2. Click `APPS` tab
@@ -30,6 +33,35 @@ The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW co
 4. In the search box click `Clear Filters` and then search for MinGW
 5. Click `MATLAB Support for MinGW-w64 C/C++ Compiler` in the results
 6. Click `Install`
+
+## Signal processing toolbox
+
+1. Open MatLab
+2. Click `APPS` tab
+3. Click `Get More Apps`
+4. In the search box click `Clear Filters` and then search for Signal Processing Toolbox
+5. Click `Signal Processing Toolbox` in the results
+6. Click `Install` (or `Trial`)
+
+If SpecEn analysis is not needed, the Signal Processing Toolbox does not need to be installed. In that case the MatLab script needs to be modified:
+
+Prevent the script from creating SpecEn columns:
+
+1. `Line 27`: delete `spec_HR` but leave the `,...` at the end
+2. `Line 28`: delete`spec_Cadence` but leave the `,...` at the end
+3. `Line 29`: delete `spec_Power` but leave the `};` at the end
+
+Prevent the script from calculating SpecEn:
+
+1. `Lines 67 - 71`: add `%`
+
+Prevent the script from looking for SpecEn columns:
+
+1. `Line 73`: replace `cell(1,18);` with `cell(1,15);`
+2. Delete entire `Lines 81, 86, 91` that end with `spec(number);`
+3. Renumber `Lines 74 - end` so that `res_day1{1,num}` are sequential each line
+
+Run the script and it should work without the need for Signal Processing Toolbox, with the tradeoff that SpecEn will not be calculated.
 
 # Notes
 
