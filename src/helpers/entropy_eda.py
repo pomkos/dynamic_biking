@@ -71,7 +71,7 @@ def app(filename: str, out_path:str):
     })
     
     df = df_sess.merge(df_ent, suffixes=('_step2','_matlab'))
-    st.info(f"The table below was created by merging the file created in Step 2 and {filename}")
+    st.info(f'The table below was created by merging the file created in Step 2 and "{filename}"')
     st.write(df)
 
     st.write("## Graphing")
