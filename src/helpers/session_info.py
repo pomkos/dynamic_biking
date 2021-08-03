@@ -35,7 +35,7 @@ def app(file_locs, out_path:str, pattern: str):
         )
         df = df.append(temp_df)
     df_info = settings.merge(df_length, on=["participant", "session"])
-
+    
     st.write(
         """ The table includes some basic information about sessions, including:
     * Settings used

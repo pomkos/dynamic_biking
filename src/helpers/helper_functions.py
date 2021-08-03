@@ -55,6 +55,14 @@ def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
         plt.savefig(f"{out_path}/bar_plot.png", dpi=300)
     return fig
 
+def check_file_format(filename:str) -> None:
+    '''
+    Checks whether files have been named using the convention
+    `partID_sessID`
+    '''
+    import streamlit as st
+    if (filename.count('_') != 7):
+        st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')
 
 def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
@@ -84,7 +92,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         col.lower().replace("(", "_").replace(")", "").replace(" ", "_")
         for col in temp_df.columns
     ]
-    # remove spaces from the timer columb
+    # remove spaces from the timer column
     temp_df["timer"] = temp_df["timer"].str.replace(" ", "")
 
     # extract date from filename, then create datetime column
@@ -104,6 +112,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     )
 
     # extract sess, assumed to be at end of the filename
+    check_file_format(filename)
     participant, session = get_idsess(filename, pattern)
     temp_df["session"] = session
     temp_df["participant"] = participant
