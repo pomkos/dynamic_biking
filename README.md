@@ -2,11 +2,11 @@
 
 1. [Background](#background)
 2. [Instructions](#instructions)
-3. [MatLab Script Instructions](#matlab_script)
-    1. [MinGW Addon](#mingw_addon)
-    2. [Signal Processing Toolbox addon](#signal_processing_toolbox)
+3. [MatLab Script Instructions](#matlab-script)
+    1. [MinGW Addon](#mingw-addon)
+    2. [Signal Processing Toolbox addon](#signal-processing-toolbox)
 1. [Notes](#notes)
-2. [Expected File Layout](#expected_file_layout)
+2. [Expected File Layout](#expected-file-layout)
 
 # Background
 
@@ -31,11 +31,11 @@ Screenshot of the first page with general instructions for each step.
 6. `Step 3`: Follow instructions to edit and run MatLab script
 7. `Step 4`: Basic data exploration, optional
 
-# MatLab script
+# MatLab Script
 
 The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW compiler (all entropy analysis) and the Signal Processing Toolbox (SpecEn analysis only). This requires logging into MatLab using an account.
 
-## MinGW compiler
+## MinGW Compiler
 
 1. Open MatLab
 2. Click `APPS` tab
@@ -44,7 +44,7 @@ The scripts used in MatLab for ApEn, SamEn, SpecEn analysis require the MinGW co
 5. Click `MATLAB Support for MinGW-w64 C/C++ Compiler` in the results
 6. Click `Install`
 
-## Signal processing toolbox
+## Signal Processing Toolbox
 
 1. Open MatLab
 2. Click `APPS` tab
@@ -77,7 +77,7 @@ Run the script and it should work without the need for Signal Processing Toolbox
 
 This repo does not contain the MatLab scripts required for ApEn, SamEn, and SpecEn analysis of dynamic bike cadence. The scripts contained in this repo are self contained, but all MatLab scripts must be moved to the `dynamic_biking/src/matlab` folder, with the exception of `entropy_script.m` that should be moved to the `dynamic_biking` folder, before entropy analysis can proceed. 
 
-# Expected file layout
+# Expected File Layout
 
 The dynamic bike scripts expect the following organization:
 
