@@ -12,10 +12,13 @@
 
 This repo was created to share the code used to create the entropy analysis workflow. Features include:
 
+* Bash script to install python library requirements for each script
+* Bash script to start the main script webgui
 * Webgui using the [streamlit](https://streamlit.io) library
 * Extraction of settings used per participant and session
 * Interactive clipping of datasets of dramatic jumps in cadence
 * Conversion of dynamic files to be used with the MatLab entropy scripts
+* Exploration of entropy results 
 
 Screenshot of the first page with general instructions for each step.
 
