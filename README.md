@@ -69,6 +69,8 @@ This repo does not contain the MatLab scripts required for ApEn, SamEn, and Spec
 
 # Expected file layout
 
+The dynamic bike scripts expect the following organization:
+
 ```
 dynamic_biking                          # place entropy_script.m in here
     |-- .gitignore                      # list of file extensions that will not be uploaded to github
