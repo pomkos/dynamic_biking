@@ -5,6 +5,16 @@ import matplotlib.pyplot as plt  # plot labeling
 
 
 def app(file_locs, out_path:str, pattern: str):
+    if not pattern:
+        st.info(
+            """
+        __NOTE__: The script assumes that filenames have id information at the end in the format `xxx000_yyy000.txt` where:
+        * Letters and numbers before the '_' represent participant ID
+        * Letters and numbers after the '_' represent session number
+        * .txt is the file extension
+        """
+        )
+        st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001`")
     settings = h.settings_finder(file_locs, pattern)
     # import and format each bike dataframe
     df = pd.DataFrame()
@@ -26,16 +36,6 @@ def app(file_locs, out_path:str, pattern: str):
         df = df.append(temp_df)
     df_info = settings.merge(df_length, on=["participant", "session"])
 
-    if not pattern:
-        st.info(
-            """
-        __NOTE__: The script assumes that filenames have id information at the end in the format `xxx000_yyy000.txt` where:
-        * Letters and numbers before the '_' represent participant ID
-        * Letters and numbers after the '_' represent session number
-        * .txt is the file extension
-        """
-        )
-        st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001`")
     st.write(
         """ The table includes some basic information about sessions, including:
     * Settings used

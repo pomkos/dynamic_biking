@@ -74,8 +74,26 @@ elif "matlab" in get_info:
     matlab = read_txt_as_str("matlab_troubleshooting")
 
     st.write(matlab)
+
+    st.write("""#### ApSamEn not found in current folder
+In case the error below appears, click `add its folder to the MATLAB path` and run the script again
+
+```
+Building with 'MinGW64 Compiler (C)'.
+MEX completed successfully.
+'ApSamEn' is not found in the current folder or on the MATLAB path, but exists in:
+    [FOLDER LOCATION]
+
+Change the MATLAB current folder or add its folder to the MATLAB path.
+
+Error in apsamen_cleaned (line 61)
+         [ap(n,num),  sam(n,num)]  = ApSamEn(data1(N1:N2,num),2,0.2*std1(num),n);
+```
+    """)
+    
     with st.beta_expander("Error solution"):
         st.image("images/matlab_error.png")
+    
 
     st.write(
         """### Retrieving Entropy Results

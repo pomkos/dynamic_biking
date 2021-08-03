@@ -137,6 +137,7 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     input
     -----
     list: List of file locations, will be put into sess_finder function
+    pattern: placeholder, for user to provide ID pattern. Not used as of 8/3/2021
 
     output
     ------
@@ -164,10 +165,17 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     speeds = []
 
     for i in range(len(settings)):
-        modes.append(re.findall("([a-z]\w+)\s+mode", settings[i])[0])
-        stiffs.append(re.findall("stiffness\s+=\s+(\d+),", settings[i])[0])
-        speeds.append(re.findall("speed\s+=\s+(\d+)", settings[i])[0])
+        set = settings[i] # one setting line
 
+        bike_mode = re.findall("([a-z]\w+)\s+mode", set)[0]
+        setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
+        modes.append(bike_mode)
+        stiffs.append(setting_stiffness)
+        if 'dynamic' in set:
+            setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
+        else: # static does not have speed setting
+            setting_speed = 'NA'        
+        speeds.append(setting_speed)
     settings_df = pd.DataFrame(
         {
             "participant": parts,
@@ -184,7 +192,7 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
             "session": "object",
             "mode": "object",
             "stiffness": float,
-            "speed": float,
+            "speed": "object",
         }
     )
     settings_df["part_sess"] = settings_df["participant"] + "_" + settings_df["session"]

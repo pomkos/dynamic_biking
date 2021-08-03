@@ -9,20 +9,6 @@
 
 ### Troubleshooting
 
-In case the error below appears, click `add its folder to the MATLAB path` and run the script again
+#### Cannot find file error
 
-```
-Building with 'MinGW64 Compiler (C)'.
-MEX completed successfully.
-'ApSamEn' is not found in the current folder or on the MATLAB path, but exists in:
-    [FOLDER LOCATION]
-
-Change the MATLAB current folder or add its folder to the MATLAB path.
-
-Error in apsamen_cleaned (line 61)
-         [ap(n,num),  sam(n,num)]  = ApSamEn(data1(N1:N2,num),2,0.2*std1(num),n);
-```
-
-#### cannot find file error
-
-Make sure the sidebar of MatLab shows the contents of the `dyanmic_biking` folder, not the `input` or other folders, before pressing `run`.
+Make sure the sidebar of MatLab shows the contents of the `dynamic_biking` folder, not the `input` or other folders, before pressing `run`.
