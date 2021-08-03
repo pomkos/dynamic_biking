@@ -14,7 +14,7 @@ if %response%==2 GOTO mini
 if %response%==3 GOTO instructions
 :eof
 
-:: ------------------------ INITIATION SECTION ------------------------ ::
+:: ------------------------ INITIALIZATION SECTION ------------------------ ::
 :instructions
 ECHO "Step 1. Install miniconda3 64bit from the opened link"
 ECHO.
