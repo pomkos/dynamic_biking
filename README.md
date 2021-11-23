@@ -66,7 +66,7 @@ __Prevent the script from creating SpecEn columns:__
 
 __Prevent the script from calculating SpecEn:__
 
-1. `Lines 67 - 71`: add `%`
+1. `Lines 67 - 71`: add `%`at the beginning
 
 __Prevent the script from looking for SpecEn columns:__
 
