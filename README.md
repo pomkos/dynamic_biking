@@ -22,7 +22,7 @@ This repo was created to share the code used to create the entropy analysis work
 
 Screenshot of the first page with general instructions for each step.
 
-![image](https://github.com/pomkos/dynamic_biking/raw/main/Screen%20Shot%202021-07-27%20at%2010.04.26.png)
+![image](https://github.com/pomkos/dynamic_biking/raw/main/screenshot.png)
 
 # Instructions
 
