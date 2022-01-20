@@ -44,8 +44,8 @@ input_place = st.empty()
 # folder = st.text_input('paste location of files')
 
 dir_path = os.path.dirname(os.path.realpath(__file__)).strip('src')
-in_path = "..\\input"
-out_path = "..\\output"
+in_path = "../input"
+out_path = "../output"
 file_locs = glob.glob(
     f"{in_path}/*.txt", recursive=True
 )  # Make a list of txt files in the folder and subfolders
@@ -69,12 +69,12 @@ elif "matlab" in get_info:
     1. Click the green `▶` "Run" button under "Editor" tab
     """
     )
-    with st.beta_expander("Example of Step 2"):
+    with st.expander("Example of Step 2"):
         st.image("images/matlab_menu.png")
     matlab = read_txt_as_str("matlab_troubleshooting")
 
     st.write(matlab)
-    with st.beta_expander("Error solution"):
+    with st.expander("Error solution"):
         st.image("images/matlab_error.png")
 
     st.write(

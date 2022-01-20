@@ -70,12 +70,14 @@ def cut_dataframe(dataframe, start, end):
     """
     This function is cached so the dataset won't be recut each time a button is pressed
     """
-    if start > 0:
-        new_df = dataframe[(dataframe["seconds_elapsed"] >= start)]
-    if end > 0:
-        new_df = dataframe[(dataframe["seconds_elapsed"] <= end)]
     if (start == 0) and (end == 0):
         new_df = dataframe.copy()
+        return new_df
+
+    if end == 0:
+        end = len(dataframe)
+    
+    new_df = dataframe[(dataframe["seconds_elapsed"] >= start) & (dataframe["seconds_elapsed"] <= end)]
     return new_df
 
 
@@ -84,12 +86,13 @@ def app(file_locs, pattern, in_path, out_path):
 
     df = load_dataframe(file_locs, pattern)  # run once
     st.sidebar.write("--------------------")
-
+    
     start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)
     end = st.sidebar.number_input("End", min_value=0.0, step=1.0)
     st.sidebar.info(
         "Modify the dataset to eliminate sudden jumps at the beginning or end of the graphs"
     )
+    
 
     new_df = cut_dataframe(
         df, start, end
@@ -110,7 +113,7 @@ def app(file_locs, pattern, in_path, out_path):
         )
         st.pyplot(plot.fig)
 
-    with st.beta_expander("Show current dataset"):
+    with st.expander("Show current dataset"):
         st.info(
             "This is a dataset of all files in one, save if you want all time series in one file."
         )

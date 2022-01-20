@@ -63,7 +63,7 @@ def app(filename: str, out_path:str):
 
     st.write("## Graphing")
     graph_options = ["bar plot", "box plot", "scatterplot", "facet grid"]
-    colx, coly = st.beta_columns(2)
+    colx, coly = st.columns(2)
     with colx:
         x = st.selectbox("X axis", options=df.columns, format_func=format_options)
     with coly:
