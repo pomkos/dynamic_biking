@@ -25,4 +25,8 @@ The purpose of this step is to get each bike session file ready for entropy anal
 1. Save all sessions in separate excel sheets (Required)
 
 #### Step 3: MatLab
-Some minor adjustments to the MatLab script may be required if the script is run on a new laptop or by a new user
+Instructions for setting up MatLab is included in this step
+
+#### Step 4: View Results
+
+Finishing step: merge entropy dataset with dataset from Step 2, and graph results

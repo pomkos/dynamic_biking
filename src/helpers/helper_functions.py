@@ -55,6 +55,14 @@ def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
         plt.savefig(f"{out_path}/bar_plot.png", dpi=300)
     return fig
 
+def check_file_format(filename:str) -> None:
+    '''
+    Checks whether files have been named using the convention
+    `partID_sessID`
+    '''
+    import streamlit as st
+    if (filename.count('_') != 7):
+        st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')
 
 def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
@@ -84,7 +92,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         col.lower().replace("(", "_").replace(")", "").replace(" ", "_")
         for col in temp_df.columns
     ]
-    # remove spaces from the timer columb
+    # remove spaces from the timer column
     temp_df["timer"] = temp_df["timer"].str.replace(" ", "")
 
     # extract date from filename, then create datetime column
@@ -104,6 +112,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     )
 
     # extract sess, assumed to be at end of the filename
+    check_file_format(filename)
     participant, session = get_idsess(filename, pattern)
     temp_df["session"] = session
     temp_df["participant"] = participant
@@ -126,7 +135,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         {"power_w": "power_watt", "heart_beat": "heart_rate"}, axis=1
     )
 
-    temp_df["part_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+    temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
     return temp_df
 
 
@@ -137,6 +146,7 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     input
     -----
     list: List of file locations, will be put into sess_finder function
+    pattern: placeholder, for user to provide ID pattern. Not used as of 8/3/2021
 
     output
     ------
@@ -164,9 +174,19 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     speeds = []
 
     for i in range(len(settings)):
-        modes.append(re.findall("([a-z]\w+)\s+mode", settings[i])[0])
-        stiffs.append(re.findall("stiffness\s+=\s+(\d+),", settings[i])[0])
-        speeds.append(re.findall("speed\s+=\s+(\d+)", settings[i])[0])
+        set = settings[i] # one setting line
+
+        bike_mode = re.findall("([a-z]\w+)\s+mode", set)[0]
+        modes.append(bike_mode)
+        if 'dynamic' in set:
+            setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
+            setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
+        else: # static mode does not have speed setting
+            import numpy as np
+            setting_speed = np.nan
+            setting_stiffness = re.findall("stiffness\s+=\s+(\d+)", set)[0]
+        speeds.append(setting_speed)
+        stiffs.append(setting_stiffness)
 
     settings_df = pd.DataFrame(
         {
@@ -187,9 +207,9 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
             "speed": float,
         }
     )
-    settings_df["part_sess"] = settings_df["participant"] + "_" + settings_df["session"]
+    settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
     settings_df = settings_df[
-        ["participant", "session", "part_sess", "mode", "stiffness", "speed"]
+        ["participant", "session", "id_sess", "mode", "stiffness", "speed"]
     ]
 
     return settings_df

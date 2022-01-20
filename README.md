@@ -27,12 +27,18 @@ Screenshot of the first page with general instructions for each step.
 # Instructions
 
 1. Run `install.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
-2. Launch script by double clicking on `start_me.bat`
-3. All dynamic bike files should be placed in `input` folder
-4. `Step 1`: Click save at the bottom of the page
-5. `Step 2`: Clip files as needed, then click save at the bottom of the page
-6. `Step 3`: Follow instructions to edit and run MatLab script
-7. `Step 4`: Basic data exploration, optional
+    1. Copy pasted the first link (miniconda), and download Python 3.8
+    2. Copy pasted the second link (VScode), downloaded the latest version
+    3. Close the black window (terminal)
+    4. Double click on `install.bat` again
+        1. Type `2`, enter
+        2. Wait for installation to finish, message will say "Click startme.bat"
+3. Launch script by double clicking on `start_me.bat`
+4. All dynamic bike files should be placed in `input` folder
+5. `Step 1`: Click save at the bottom of the page
+6. `Step 2`: Clip files as needed, then click save at the bottom of the page
+7. `Step 3`: Follow instructions to edit and run MatLab script
+8. `Step 4`: Basic data exploration, optional
 
 # MatLab Script
 
@@ -66,7 +72,7 @@ __Prevent the script from creating SpecEn columns:__
 
 __Prevent the script from calculating SpecEn:__
 
-1. `Lines 67 - 71`: add `%`
+1. `Lines 67 - 71`: add `%`at the beginning
 
 __Prevent the script from looking for SpecEn columns:__
 
