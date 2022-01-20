@@ -32,7 +32,7 @@ Screenshot of the first page with general instructions for each step.
     3. Close the black window (terminal)
     4. Double click on `install.bat` again
         1. Type `2`, enter
-        2. Wait for installation to finish
+        2. Wait for installation to finish, message will say "Click startme.bat"
 3. Launch script by double clicking on `start_me.bat`
 4. All dynamic bike files should be placed in `input` folder
 5. `Step 1`: Click save at the bottom of the page
