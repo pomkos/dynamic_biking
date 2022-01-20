@@ -34,7 +34,8 @@ Screenshot of the first page with general instructions for each step.
         1. Type `2`, enter
         2. Wait for installation to finish, message will say "Click startme.bat"
 3. Launch script by double clicking on `start_me.bat`
-4. All dynamic bike files should be placed in `input` folder
+    1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
+    2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown4. All dynamic bike files should be placed in `input` folder
 5. `Step 1`: Click save at the bottom of the page
 6. `Step 2`: Clip files as needed, then click save at the bottom of the page
 7. `Step 3`: Follow instructions to edit and run MatLab script
