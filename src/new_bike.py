@@ -44,9 +44,10 @@ get_info = st.sidebar.radio(
     options=[
         "Homepage",
         "Step 1: Overview",
-        "Step 2: Formatting",
-        "Step 3: MatLab",
-        "Step 4: View Results",
+        "Step 2a: Format all sessions",
+        "Step 2b: Format per participant",
+        "Step 3: Entropy calculation",
+        "Step 4: View results",
     ],
     index=0,
 ).lower()
@@ -64,37 +65,34 @@ file_locs = glob.glob(
 if "homepage" in get_info:
     input_place.empty()
     st.write(
-        "Welcome to the Dynamic Bike Script :bike:! This script was created to make entropy analysis more accurate and less prone to human error."
+        "Welcome to the Dynamic Bike Script :bike:! Follow the instructions to get dynamic bike output files ready for MatLab entropy analysis."
     )
     homepage = read_txt_as_str("homepage", 'txt')
     st.write(homepage)
     st.stop()
 
-elif "matlab" in get_info:
+elif "entropy" in get_info:
     input_place.empty()
-    st.write("### Running MatLab Script")
+    st.write("__Entropy calculation__")
     st.write(
         f"""
-    1. Open the `entropy_script.m` file
+    1. Double click the `entropy_script.m` file in the `dynamic_biking` folder
     1. Click the green `▶` "Run" button under "Editor" tab
     """
     )
-    with st.expander("Example of Step 2"):
+    with st.expander("Demonstration", expanded=True):
         st.image("images/matlab_menu.png")
-    matlab = read_txt_as_str("matlab_troubleshooting")
-
-    st.write(matlab)
-    with st.expander("Error solution"):
-        st.image("images/matlab_error.png")
 
     st.write(
-        """### Retrieving Entropy Results
+        """__Retrieving entropy results__
+
 All entropy results are saved in the file defined in line 21 of the MatLab script, in the `output` folder
     """
     )
+    st.write('---------------------------------------------------------')
     matlab = read_txt_as_str("matlab_troubleshooting",'txt')
     st.write('### Installation')
-    with st.beta_expander('MatLab Setup Instructions'):
+    with st.expander('MatLab Setup Instructions'):
         matlab_install = read_txt_as_str('../README','md')
         st.write(matlab_install)
     st.write(matlab)
@@ -115,7 +113,7 @@ Error in apsamen_cleaned (line 61)
 ```
     """)
     
-    with st.beta_expander("Error solution"):
+    with st.expander("Error solution"):
         st.image("images/matlab_error.png")
     
     st.stop()
@@ -153,7 +151,12 @@ if "overview" in get_info:
 
     session_info.app(file_locs, out_path, pattern=None,)  # Load session_info app
 
-elif "format" in get_info:
-    from helpers import entropy_format
+elif "sessions" in get_info:
+    from helpers import entropy_format_all
 
-    entropy_format.app(file_locs, pattern=None, in_path=in_path, out_path=out_path)  # Load entropy_format
+    entropy_format_all.app(file_locs, pattern=None, in_path=in_path, out_path=out_path)  # Load entropy_format_all
+
+elif "participant" in get_info:
+    from helpers import entropy_format_specific
+
+    entropy_format_specific.app(file_locs, pattern=None, in_path=in_path, out_path=out_path) # Load entropy_format_specific

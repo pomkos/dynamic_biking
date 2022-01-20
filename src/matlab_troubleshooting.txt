@@ -6,7 +6,6 @@
 @ To create links use: [click me](https://kent.edu), user will get a clickable "click me"
 @@@@@@
 
-
 ### Troubleshooting
 
 #### Cannot find file error

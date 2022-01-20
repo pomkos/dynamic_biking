@@ -88,12 +88,29 @@ def cut_dataframe(dataframe, start, end):
 
 def app(file_locs, pattern, in_path, out_path):
     # all_filenames = h.get_filename(file_locs)
+    st.subheader("Are there any sudden jumps? Individual edit")
+    st.write(
+        "Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets."
+    )
+    st.info('__Step 2b is optional__, it is for if one session needs more custom modification than others.')
 
     df = load_dataframe(file_locs, pattern)  # run once
     st.sidebar.write("--------------------")
     
-    start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)
-    end = st.sidebar.number_input("End", min_value=0.0, step=1.0)
+    participants = list(df['participant'].unique())
+    participants.sort()
+    sessions = list(df['session'].unique())
+    sessions.sort()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        participant = st.selectbox('Select the participant', participants)
+    with col2: 
+        session = st.selectbox('Select the session', sessions)
+    
+    df = df[(df['participant'] == participant) & (df['session'] == session)]
+    start = st.sidebar.number_input("Start (minute)", min_value=0.0, step=1.0)
+    end = st.sidebar.number_input("End (minute)", min_value=0.0, step=1.0)
     st.sidebar.info(
         "Modify the dataset to eliminate sudden jumps at the beginning or end of the graphs"
     )
@@ -102,12 +119,8 @@ def app(file_locs, pattern, in_path, out_path):
     new_df = cut_dataframe(
         df, start, end
     ).copy()  # run if the start/end values are changed
-    st.subheader("Are there any sudden jumps?")
-    st.info(
-        "Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets."
-    )
     reverse = st.checkbox("Columns as participants")
-    with st.spinner("Loading facet grid plot"):
+    with st.spinner("Loading plot"):
         plot = facet_grid(
             x="seconds_elapsed",
             y="speed_rpm",
@@ -118,9 +131,9 @@ def app(file_locs, pattern, in_path, out_path):
         )
         st.pyplot(plot.fig)
 
-    with st.expander("Show current dataset"):
+    with st.expander("Show current session's dataset"):
         st.info(
-            "This is a dataset of all files in one, save if you want all time series in one file."
+            f"This is a preview of participant {participant}, session {session}"
         )
         preview = new_df.head()
         st.write(preview)
@@ -128,9 +141,8 @@ def app(file_locs, pattern, in_path, out_path):
     with st.form("save_results"):
         st.subheader("What should be saved?")
         save_plot = st.checkbox("The plot as it looks now")
-        save_all_in_one = st.checkbox("All sessions in one excel file")
         save_matlab = st.checkbox(
-            "All sessions formatted for MatLab (required for MatLab entropy script)",
+            "This session formatted for MatLab (required for MatLab entropy script)",
             value=True,
         )
 
@@ -150,8 +162,7 @@ def app(file_locs, pattern, in_path, out_path):
                 reverse=reverse,
                 save=True,
             )
-        if save_all_in_one:
-            h.save_dataset(new_df, f"{out_path}/all_sessions", extension='xls')
+ 
         if save_matlab:
             save_as_files(new_df, out_path, save_form)
-        save_form.success("Saved!")
+        save_form.success(f"Saved as __{participant}_{session}.xlsx__ in the output folder!")

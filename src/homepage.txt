@@ -15,7 +15,7 @@ This step initializes the `session_info.py` script. It will preview settings and
 1. Save dataframe as excel file (Required)
 1. Save bar plot (optional)
 
-#### Step 2: Formatting
+#### Step 2a: Format all sessions
 The purpose of this step is to get each bike session file ready for entropy analysis. Minor cleaning and column renaming is involved.
 
 1. Review results
@@ -24,8 +24,11 @@ The purpose of this step is to get each bike session file ready for entropy anal
 1. Save all sessions in one excel sheet (optional)
 1. Save all sessions in separate excel sheets (Required)
 
-#### Step 3: MatLab
-Instructions for setting up MatLab is included in this step
+#### Step 2b: Format per participant
+If one session needs more specific formatting, it can be selected here. The same procedure applies as for Step 2a. 
+
+#### Step 3: Entropy Calculation
+Calculation is done using MatLab. This step contains instructions for setting up MatLab is included in this step
 
 #### Step 4: View Results
 
