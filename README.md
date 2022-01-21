@@ -4,11 +4,14 @@ Download [available here](https://github.com/pomkos/dynamic_biking/releases)
 
 1. [Background](#background)
 2. [Instructions](#instructions)
-3. [MatLab Script Instructions](#matlab-script)
+    1. [Windows](#windows)
+    2. [MacOS](#macos)
+    3. [Use](#use)
+4. [MatLab Script Instructions](#matlab-script)
     1. [MinGW Addon](#mingw-addon)
     2. [Signal Processing Toolbox addon](#signal-processing-toolbox)
-1. [Notes](#notes)
-2. [Expected File Layout](#expected-file-layout)
+5. [Notes](#notes)
+6. [Expected File Layout](#expected-file-layout)
 
 # Background
 
