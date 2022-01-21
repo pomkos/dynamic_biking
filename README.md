@@ -1,3 +1,5 @@
+Download [available here](https://github.com/pomkos/dynamic_biking/releases)
+
 # Table of Contents
 
 1. [Background](#background)
@@ -26,20 +28,55 @@ Screenshot of the first page with general instructions for each step.
 
 # Instructions
 
+## Windows
+
+### Install
+
 1. Run `install.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
-    1. Copy pasted the first link (miniconda), and download Python 3.8
-    2. Copy pasted the second link (VScode), downloaded the latest version
+    1. Copy paste the first link (miniconda), and download Python 3.8
+    2. Copy paste the second link (VScode), downloaded the latest version
     3. Close the black window (terminal)
     4. Double click on `install.bat` again
         1. Type `2`, enter
         2. Wait for installation to finish, message will say "Click startme.bat"
-3. Launch script by double clicking on `start_me.bat`
+
+### Start
+1. Launch script by double clicking on `start_me.bat`
     1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
     2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown4. All dynamic bike files should be placed in `input` folder
-5. `Step 1`: Click save at the bottom of the page
-6. `Step 2`: Clip files as needed, then click save at the bottom of the page
-7. `Step 3`: Follow instructions to edit and run MatLab script
-8. `Step 4`: Basic data exploration, optional
+
+## MacOS
+
+### Install
+1. Download and install miniconda, Python 3.8 version: 
+    1. Macbook Pro/Macbook: https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-MacOSX-x86_64.pkg
+    2. Macbook M1: https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.1-MacOSX-arm64.sh
+    3. For both versions: once installation is finished, open the terminal and type in `conda init`. If successful, close the terminal. If an error is written, contact Peter
+2. Download the latest version of the dynamic bike script, extract the folder to the Desktop
+3. Open the Terminal, then copy paste the following and press enter:
+
+```
+cd ~/Desktop/dynamic_biking/src
+yes | pip install -r requirements.txt
+streamlit run new_bike.py
+```
+
+### Start
+
+To start the script, open the terminal and copy-paste the following:
+
+```
+cd ~/Desktop/dynamic_biking/src
+streamlit run new_bike.py
+```
+
+## Use
+
+1. `Step 1`: Click save at the bottom of the page
+2. `Step 2`: Clip files as needed, then click save at the bottom of the page
+3. `Step 3`: Follow instructions to edit and run MatLab script
+4. `Step 4`: Basic data exploration, optional
+
 
 # MatLab Script
 
