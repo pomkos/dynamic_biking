@@ -74,6 +74,9 @@ if "homepage" in get_info:
 elif "entropy" in get_info:
     input_place.empty()
     st.write("__Entropy calculation__")
+    # give user warning if the matlab files are not found
+    from helpers import helper_functions as h
+    h.check_matlab_file_loc()
     st.write(
         f"""
     1. Double click the `entropy_script.m` file in the `dynamic_biking` folder

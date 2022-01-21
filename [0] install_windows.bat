@@ -62,12 +62,25 @@ CALL %USERPROFILE%\miniconda3\Scripts\activate.bat %USERPROFILE%\miniconda3
 :: This line installs everything in the requirements.txt file ::
 pip install -r requirements.txt --upgrade
 
+IF NOT EXIST entropy_script.m (
+    echo "ERROR: entropy_script.m not found, make sure its in the dynamic_biking folder!"
+)
+IF NOT EXIST ./src/matlab/ApSamEn.m (
+    echo "ERROR: ApSamEn.m not found, make sure its in the dynamic_biking/src/matlab folder!"
+)
+IF NOT EXIST ./src/matlab/Convert_Data.m (
+    echo "ERROR: Convert_Data.m not found, make sure its in the dynamic_biking/src/matlab folder!"
+)
+IF NOT EXIST ./src/matlab/MatchCounter.c (
+    echo "ERROR: MatchCounter.c not found, make sure its in the dynamic_biking/src/matlab folder!"
+)
+
 echo.
 echo "-------------------------------------"
 echo "Required libraries installed."
 echo "-------------------------------------"
 echo.
-echo "Open start_me.bat"
+echo "Please open start_me.bat"
 echo.
 :: This line keeps the terminal open ::
 PAUSE

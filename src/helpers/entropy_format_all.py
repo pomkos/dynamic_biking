@@ -98,7 +98,6 @@ def app(file_locs, pattern, in_path, out_path):
     st.sidebar.info(
         "Modify the dataset to eliminate sudden jumps at the beginning or end of the graphs"
     )
-    
 
     new_df = cut_dataframe(
         df, start, end

@@ -213,3 +213,35 @@ def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
     ]
 
     return settings_df
+
+def check_if_file_exists(file_loc: str) -> bool:
+    '''
+    Checks whether the given file exists in the given location. This is to make
+    sure the user copied MatLab files in the correct place.
+
+    file_loc should include filename
+    '''
+    from os.path import exists
+    file_exists = exists(file_loc)
+    return file_exists
+
+def check_matlab_file_loc():
+    import streamlit as st
+    file_exist_dict = {}
+    for filename in ['entropy_script.m', 'ApSamEn.m', 'Convert_Data.m', 'MatchCounter.c']:
+        if filename == 'entropy_script.m':
+            file_loc = '' + filename
+        else:
+            file_loc = 'matlab/' + filename
+        file_exist_dict[filename] = check_if_file_exists(file_loc)
+    
+    num_not_exist = 0
+    for filename, exists in file_exist_dict.items():
+        if not exists:
+            if filename == 'entropy_script.m':
+                st.warning(f"__WARNING__: `{filename}` was not found in the `dynamic_biking` folder")
+            else:
+                st.warning(f"__WARNING__: `{filename}` was not found in the `dynamic_biking/src/matlab` folder")
+            num_not_exist += 1
+    if num_not_exist:
+        st.info("__INFO__: The MatLab script assumes each of the above files are in the given location. Move them there before double clicking on `entropy_script.m`")
