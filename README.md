@@ -52,6 +52,12 @@ Basic overview of each step, for both Windows and MacOS:
     4. Double click on `install_windows.bat` again
         1. Type `2`, enter
         2. Wait for installation to finish, message will say "Click startme.bat"
+2. Make sure the MatLab files are in the proper place:
+    1. `entropy_script.m` in the `dynamic_bike` folder
+    2. The following MatLab files in the `dynamic_bike/src/matlab` folder:
+        1. `ApSamEn.m`
+        2. `Convert_Data.m`
+        3. `MatchCounter.c`
 
 ### MacOS
 
@@ -60,7 +66,13 @@ Basic overview of each step, for both Windows and MacOS:
     2. Macbook M1: [click here to download](https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.1-MacOSX-arm64.sh)
     3. For both versions: once installation is finished, open the terminal and type in `conda init`. If successful, close the terminal. If an error is written, contact Peter
 2. Download the latest version of the dynamic bike script, extract the folder to the Desktop
-3. Open the Terminal, then copy paste the following and press enter:
+3. Make sure the MatLab files are in the proper place:
+    1. `entropy_script.m` in the `dynamic_bike` folder
+    2. The following MatLab files in the `dynamic_bike/src/matlab` folder:
+        1. `ApSamEn.m`
+        2. `Convert_Data.m`
+        3. `MatchCounter.c`
+4. Open the Terminal, then copy paste the following and press enter:
 
 ```
 cd ~/Desktop/dynamic_biking/src
