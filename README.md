@@ -1,4 +1,4 @@
-Download [available here](https://github.com/pomkos/dynamic_biking/releases)
+Download the latest version from [here](https://github.com/pomkos/dynamic_biking/releases)
 
 # Table of Contents
 
