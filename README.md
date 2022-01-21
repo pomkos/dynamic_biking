@@ -31,6 +31,16 @@ Screenshot of the first page with general instructions for each step.
 
 # Instructions
 
+
+## Use
+
+Basic overview of each step, for both Windows and MacOS:
+
+1. `Step 1`: Click save at the bottom of the page
+2. `Step 2a` and `Step 2b`: Clip files as needed, then click save at the bottom of the page
+3. `Step 3`: Follow instructions to edit and run MatLab script
+4. `Step 4`: Basic data exploration, optional
+
 ## Windows
 
 ### Install
@@ -72,14 +82,6 @@ To start the script, open the terminal and copy-paste the following:
 cd ~/Desktop/dynamic_biking/src
 streamlit run new_bike.py
 ```
-
-## Use
-
-1. `Step 1`: Click save at the bottom of the page
-2. `Step 2a` and `Step 2b`: Clip files as needed, then click save at the bottom of the page
-3. `Step 3`: Follow instructions to edit and run MatLab script
-4. `Step 4`: Basic data exploration, optional
-
 
 # MatLab Script
 
