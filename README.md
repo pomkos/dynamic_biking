@@ -41,26 +41,20 @@ Basic overview of each step, for both Windows and MacOS:
 3. `Step 3`: Follow instructions to edit and run MatLab script
 4. `Step 4`: Basic data exploration, optional
 
-## Windows
+## Install
 
-### Install
+### Windows
 
-1. Run `install.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
+1. Run `install_windows.bat` and follow instructions to install miniconda and visual studio code, then the pip libraries
     1. Copy paste the first link (miniconda), and download Python 3.8
     2. Copy paste the second link (VScode), downloaded the latest version
     3. Close the black window (terminal)
-    4. Double click on `install.bat` again
+    4. Double click on `install_windows.bat` again
         1. Type `2`, enter
         2. Wait for installation to finish, message will say "Click startme.bat"
 
-### Start
-1. Launch script by double clicking on `start_me.bat`
-    1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
-    2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown. All dynamic bike files should be placed in `input` folder
+### MacOS
 
-## MacOS
-
-### Install
 1. Download and install miniconda, Python 3.8 version: 
     1. Macbook Pro/Macbook: [click here to download](https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-MacOSX-x86_64.pkg)
     2. Macbook M1: [click here to download](https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.1-MacOSX-arm64.sh)
@@ -74,7 +68,15 @@ yes | pip install -r requirements.txt
 streamlit run new_bike.py
 ```
 
-### Start
+## Start
+
+### Windows
+
+1. Launch the script script by double clicking on `start_me_windows.bat`
+    1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
+    2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown. All dynamic bike files should be placed in `input` folder
+
+### MacOS
 
 To start the script, open the terminal and copy-paste the following:
 
