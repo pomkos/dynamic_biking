@@ -56,7 +56,7 @@ Basic overview of each step, for both Windows and MacOS:
 ### Start
 1. Launch script by double clicking on `start_me.bat`
     1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
-    2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown4. All dynamic bike files should be placed in `input` folder
+    2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown. All dynamic bike files should be placed in `input` folder
 
 ## MacOS
 
@@ -82,6 +82,9 @@ To start the script, open the terminal and copy-paste the following:
 cd ~/Desktop/dynamic_biking/src
 streamlit run new_bike.py
 ```
+
+1. On first launch it will ask for email, you can press enter without typing anything. Won't be asked again afterwards
+2. It should open a browser window by itself, if it doesn't then copy and paste one of the two links shown. All dynamic bike files should be placed in `input` folder
 
 # MatLab Script
 
