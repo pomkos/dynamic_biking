@@ -244,4 +244,4 @@ def check_matlab_file_loc():
                 st.warning(f"__WARNING__: `{filename}` was not found in the `dynamic_biking/src/matlab` folder")
             num_not_exist += 1
     if num_not_exist:
-        st.info("__INFO__: The MatLab script assumes each of the above files are in the given location. Move them there before double clicking on `entropy_script.m`")
+        st.info("__INFO__: The MatLab script assumes each of the above files are in the given location. Move them there before double clicking on `entropy_script.m`. These are not included with this script, but Dr. Ridgel has them.")

@@ -1,12 +1,14 @@
 import glob  # Find files
 import streamlit as st  # GUI
 import os  # Get directory location
+from helpers import helper_functions as h
 
 st.set_page_config(
     page_title="Dynamic Bike Script", page_icon=":bike:"
 )  # Give website a title and icon
 st.title("Dynamic Bike Script")  # Title on main page
 
+h.check_matlab_file_loc()
 
 def read_txt_as_str(filename: str, extension: str) -> str:
     """
