@@ -90,6 +90,14 @@ def cut_dataframe(dataframe, start, end):
 def app(file_locs, pattern, in_path, out_path):
     # all_filenames = h.get_filename(file_locs)
 
+    st.write('''
+This step will get the dynamic bike files in the `input` folder ready for entropy analysis. Everything is automatic, except for the clipping. Follow the instructions below:
+
+1. Each session needs to be clipped so there are no sudden jumps from warmup->main or main->cooldown
+2. Use the sidebar to indicate where to clip the graphs
+3. Once satisfied, click `Save` at the bottom of the page
+4. All files will be saved in the `output` folder, overwriting any existing files of the same name
+    ''')
     df = load_dataframe(file_locs, pattern)  # run once
     st.sidebar.write("--------------------")
     
@@ -102,10 +110,8 @@ def app(file_locs, pattern, in_path, out_path):
     new_df = cut_dataframe(
         df, start, end
     ).copy()  # run if the start/end values are changed
-    st.subheader("Are there any sudden jumps? Group edit")
-    st.write(
-        "Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets."
-    )
+    st.subheader("Mass edit")
+
     reverse = st.checkbox("Columns as participants")
     with st.spinner("Loading facet grid plot"):
         plot = facet_grid(

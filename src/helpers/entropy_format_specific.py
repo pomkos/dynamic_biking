@@ -88,11 +88,18 @@ def cut_dataframe(dataframe, start, end):
 
 def app(file_locs, pattern, in_path, out_path):
     # all_filenames = h.get_filename(file_locs)
-    st.subheader("Are there any sudden jumps? Individual edit")
-    st.write(
-        "Prior to entropy analysis sudden jumps at the beginning and end of datasets should be removed. Use the 'start' and 'end' inputs in the sidebar to determine where to cut the datasets."
-    )
     st.info('__Step 2b is optional__, it is for if one session needs more custom modification than others.')
+
+    st.write('''
+This step is optional. It is the same as Step 2a, except it lets the user edit one session at a time.
+
+1. Select the session that needs to be clipped
+2. Use the sidebar to indicate where to clip the graph
+3. Once satisfied, click `Save` at the bottom of the page
+4. The file will be saved in the `output` folder, overwriting any existing file of the same name. 
+    ''')
+    st.subheader("Individual edit")
+
 
     df = load_dataframe(file_locs, pattern)  # run once
     st.sidebar.write("--------------------")
