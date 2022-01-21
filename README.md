@@ -52,8 +52,8 @@ Screenshot of the first page with general instructions for each step.
 
 ### Install
 1. Download and install miniconda, Python 3.8 version: 
-    1. Macbook Pro/Macbook: https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-MacOSX-x86_64.pkg
-    2. Macbook M1: https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.1-MacOSX-arm64.sh
+    1. Macbook Pro/Macbook: [click here to download](https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-MacOSX-x86_64.pkg)
+    2. Macbook M1: [click here to download](https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.1-MacOSX-arm64.sh)
     3. For both versions: once installation is finished, open the terminal and type in `conda init`. If successful, close the terminal. If an error is written, contact Peter
 2. Download the latest version of the dynamic bike script, extract the folder to the Desktop
 3. Open the Terminal, then copy paste the following and press enter:
