@@ -6,7 +6,7 @@ from helpers import helper_functions as h
 st.set_page_config(
     page_title="Dynamic Bike Script", page_icon=":bike:"
 )  # Give website a title and icon
-st.title("Dynamic Bike Script")  # Title on main page
+st.title("Dynamic Bike File Processor")  # Title on main page
 
 h.check_matlab_file_loc()
 
