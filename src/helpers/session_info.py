@@ -14,7 +14,7 @@ def app(file_locs, out_path:str, pattern: str):
         * .txt is the file extension
         """
         )
-        st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001`")
+        st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
     settings = h.settings_finder(file_locs, pattern)
     # import and format each bike dataframe
     df = pd.DataFrame()
