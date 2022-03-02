@@ -227,21 +227,24 @@ def check_if_file_exists(file_loc: str) -> bool:
 
 def check_matlab_file_loc():
     import streamlit as st
+    import os
+
+    filedir = os.getcwd().split('/src')[0]
     file_exist_dict = {}
     for filename in ['entropy_script.m', 'ApSamEn.m', 'Convert_Data.m', 'MatchCounter.c']:
         if filename == 'entropy_script.m':
-            file_loc = '../' + filename
+            file_loc = f'{filedir}/{filename}'
         else:
-            file_loc = 'matlab/' + filename
+            file_loc = f'{filedir}/src/matlab/{filename}'
         file_exist_dict[filename] = check_if_file_exists(file_loc)
     
     num_not_exist = 0
     for filename, exists in file_exist_dict.items():
         if not exists:
             if filename == 'entropy_script.m':
-                st.warning(f"__WARNING__: `{filename}` was not found in the `dynamic_biking` folder")
+                st.warning(f"__WARNING__: `{filename}` was not found in the `{filedir}` folder")
             else:
-                st.warning(f"__WARNING__: `{filename}` was not found in the `dynamic_biking/src/matlab` folder")
+                st.warning(f"__WARNING__: `{filename}` was not found in the `{filedir}/src/matlab` folder")
             num_not_exist += 1
     if num_not_exist:
         st.info("__INFO__: The MatLab script assumes each of the above files are in the given location. Move them there before double clicking on `entropy_script.m`. These are not included with this script, but Dr. Ridgel has them.")
