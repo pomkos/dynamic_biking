@@ -230,7 +230,7 @@ def check_matlab_file_loc():
     file_exist_dict = {}
     for filename in ['entropy_script.m', 'ApSamEn.m', 'Convert_Data.m', 'MatchCounter.c']:
         if filename == 'entropy_script.m':
-            file_loc = '' + filename
+            file_loc = '../' + filename
         else:
             file_loc = 'matlab/' + filename
         file_exist_dict[filename] = check_if_file_exists(file_loc)
