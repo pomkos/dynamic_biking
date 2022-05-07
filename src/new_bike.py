@@ -49,7 +49,8 @@ get_info = st.sidebar.radio(
         "Step 2a: Format all sessions",
         "Step 2b: Format per participant",
         "Step 3: Entropy calculation",
-        "Step 4: View results",
+        "Step 4: Effort calculation",
+        "Step 5: View results",
     ],
     index=0,
 ).lower()
@@ -121,6 +122,43 @@ Error in apsamen_cleaned (line 61)
         st.image("images/matlab_error.png")
     
     st.stop()
+
+elif "effort" in get_info:
+    from helpers import entropy_eda
+    from helpers import effort_calculator
+    import pandas as pd
+    st.write("## Effort Calculator")
+    st.info("Keep the files from Step 2 as well as the file created by the MatLab script in their original locations")
+    filename = st.text_input("Entropy  file name", "entropies.xls")
+    try:
+        matlab_df = df = pd.read_excel(f"{out_path}/{filename}")
+    except:
+        st.error(f"{filename} not found in the output folder")
+        st.stop()
+    
+    effort_df = effort_calculator.app(out_path)
+    matlab_df_with_effort = matlab_df.merge(effort_df, how='left', on='ID')
+
+    st.write(matlab_df_with_effort.head())
+
+    with st.form('save_effort_df2'):
+        st.info("The above preview of the entropy dataset now includes effort calculation as well")
+   
+        st.subheader("What should be saved?")
+        save_df = st.checkbox("Save dataset with effort and entropy as one file", value=True)
+        
+        save_form = st.empty()
+        save_form.info("All selected items will be saved in the 'output' folder")
+        save_us = st.form_submit_button("Save")
+
+    if save_us:
+        save_form.warning("Do not close browser until successful save")
+        if save_df:
+            h.save_dataset(matlab_df_with_effort, f"{out_path}/entropy_effort", extension='xlsx')
+        save_form.success("Saved!")
+    else:
+        st.stop()
+
 
 elif "result" in get_info:
     input_place.empty()
