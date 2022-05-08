@@ -166,7 +166,7 @@ elif "result" in get_info:
         """
     Explore using the tools below or use SPSS or other software for graphing"""
     )
-    ent_file = st.text_input("Entropy file name", value="entropies.xls")
+    ent_file = st.text_input("Entropy file name", value="entropy_effort.xlsx")
     from helpers import entropy_eda
 
     entropy_eda.app(ent_file, out_path)
