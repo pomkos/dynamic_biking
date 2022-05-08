@@ -128,7 +128,7 @@ elif "effort" in get_info:
     from helpers import effort_calculator
     import pandas as pd
     st.write("## Effort Calculator")
-    st.info("Keep the files from Step 2 as well as the file created by the MatLab script in their original locations")
+    st.info("Keep the files from Step 2 as well as the file created by the MatLab script in the `output` folder")
     filename = st.text_input("Entropy  file name", "entropies.xls")
     try:
         matlab_df = df = pd.read_excel(f"{out_path}/{filename}")
