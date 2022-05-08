@@ -1,11 +1,13 @@
 import glob
 import pandas as pd
+import streamlit as st
 
 def app(out_path):
     file_locs = glob.glob(
         f"{out_path}/*.xlsx", recursive=True
     )
-
+    # in case they rerun the script but kept original xlsx file in the output folder
+    file_locs = [file for file in file_locs if "entropy_effort.xlsx" not in file]
     all_efforts_df = pd.DataFrame()
     for file in file_locs:
         temp_df = pd.read_excel(file)
