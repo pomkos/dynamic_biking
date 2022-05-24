@@ -22,6 +22,7 @@ This repo was created to share the code used to create the entropy analysis work
 * Webgui using the [streamlit](https://streamlit.io) library
 * Extraction of settings used per participant and session
 * Interactive clipping of datasets of dramatic jumps in cadence
+* Calculation of effort
 * Conversion of dynamic files to be used with the MatLab entropy scripts
 * Exploration of entropy results 
 
