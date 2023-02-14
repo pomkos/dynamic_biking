@@ -1,6 +1,9 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import streamlit as st
+import re
+from typing import List
 
 
 def get_idsess(filename: str, pattern: str):
@@ -138,81 +141,133 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
     return temp_df
 
+class settingsFinder:
+    def __init__(self):
+        """
+        Finds the mode, stiffness, and speed settings of the bike. Call bike_v3_settings
+        for the bike put into testing in 2023, and bike_v2_settings for the bike in
+        previous years. Ask Dr. Ridgel for guidance as needed.
 
-def settings_finder(my_list: list, pattern: str) -> pd.DataFrame:
-    """
-    Finds the mode, stiffness, and speed settings of the bike
+        input
+        -----
+        list: List of file locations, will be put into sess_finder function
+        pattern: placeholder, for user to provide ID pattern. Not used as of 8/3/2021
 
-    input
-    -----
-    list: List of file locations, will be put into sess_finder function
-    pattern: placeholder, for user to provide ID pattern. Not used as of 8/3/2021
+        output
+        ------
+        settings_df: dataframe with 'sess', 'mode', 'stiffness', and 'speed' columns
+        """
+        # settings line, only used in bikev2 when the settings were in filenames and not stored as variables
+        # in the raw output files
+        self.settings = []
+        self.sessions = [] 
+        self.participants = []
 
-    output
-    ------
-    settings_df: dataframe with 'sess', 'mode', 'stiffness', and 'speed' columns
-    """
-    import re
+        self.modes = []
+        self.stiffness = []
+        self.speeds = []
+    
+    def bike_v3_settings(self, file_locations: List[str], pattern: str):
+        """
+        From each file extracts the session number, participant number, mode, stiffness, speed,
+        used for the bikev3 only. This information is presented to the user for a brief summary.
 
-    settings = []
-    sess = []
-    parts = []
-    import streamlit as st
+        Args:
+            file_locations (List[str]): List of locations for each raw output of the bike
+            pattern (str): Optional. regex pattern for the session/participant combo
+        """
+        filenames = []
+        for i in range(len(file_locations)):
+            with open(file_locations[i]) as f:
+                first_line = f.readline().strip("\n").lower()
+                for mode_type in ['static', 'dynamic']:
+                    if mode_type in first_line:
+                        self.modes.append(mode_type)
+            
+            df = pd.read_csv(file_locations[i])
+            for col in df.select_dtypes('object'):
+                df[col] = df[col].str.strip()
+            speed_list = list(df['Speed Set'].unique())
+            assert len(speed_list) == 1, f"Expected only one speed setting per output file but got multiple: {file_locations[i]}"
+            self.speeds = speed_list[0]
+            stiffness_list = list(df['Stiffness'].unique())
+            assert len(stiffness_list) == 1, f"Expected only one stiffness setting per output file but got multiple: {file_locations[i]}"
+            self.stiffness = stiffness_list[0]
 
-    for i in range(len(my_list)):
-        with open(my_list[i]) as f:
-            settings.append(f.readline().strip("\n").lower())
-        filename = my_list[i].replace("/", "\\").split("\\")[-1]
-        part_id, sess_id = get_idsess(
-            filename, pattern
-        )  # grab ids with or without custom pattern
-        parts.append(part_id)
-        sess.append(sess_id)
+            filenames.append(file_locations.split('/')[-1])
+        filenames = pd.Series(filenames)
+        id_sessions = filenames.str.extract(r'([a-z]\w+\d{3}?)_')
+        
 
-    modes = []
-    stiffs = []
-    speeds = []
+    def bike_v2_settings(self, file_locations: List[str], pattern: str):
+        """
+        From each file extracts the session number, participant number, mode, stiffness, speed,
+        used for the bikev2 only. This information is presented to the user for a brief summary.
 
-    for i in range(len(settings)):
-        set = settings[i] # one setting line
+        Args:
+            file_locations (List[str]): List of locations for each raw output of the bike
+            pattern (str): Optional. regex pattern for the session/participant combo
+        """
 
-        bike_mode = re.findall("([a-z]\w+)\s+mode", set)[0]
-        modes.append(bike_mode)
-        if 'dynamic' in set:
-            setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
-            setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
-        else: # static mode does not have speed setting
-            import numpy as np
-            setting_speed = np.nan
-            setting_stiffness = re.findall("stiffness\s+=\s+(\d+)", set)[0]
-        speeds.append(setting_speed)
-        stiffs.append(setting_stiffness)
+        for i in range(len(file_locations)):
+            with open(file_locations[i]) as f:
+                self.settings.append(f.readline().strip("\n").lower())
+            filename = file_locations[i].replace("/", "\\").split("\\")[-1]
+            part_id, sess_id = get_idsess(
+                filename, pattern
+            )  # grab ids with or without custom pattern
+            self.participants.append(part_id)
+            self.sessions.append(sess_id)
 
-    settings_df = pd.DataFrame(
-        {
-            "participant": parts,
-            "session": sess,
-            "mode": modes,
-            "stiffness": stiffs,
-            "speed": speeds,
-        }
-    )
 
-    settings_df = settings_df.astype(
-        {
-            "participant": "object",
-            "session": "object",
-            "mode": "object",
-            "stiffness": float,
-            "speed": float,
-        }
-    )
-    settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
-    settings_df = settings_df[
-        ["participant", "session", "id_sess", "mode", "stiffness", "speed"]
-    ]
 
-    return settings_df
+        for i in range(len(self.settings)):
+            set = self.settings[i] # one setting line
+
+            bike_mode = re.findall("([a-z]\w+)\s+mode", set)[0]
+            self.modes.append(bike_mode)
+            if 'dynamic' in set:
+                setting_speed = re.findall("speed\s+=\s+(\d+)", set)[0]
+                setting_stiffness = re.findall("stiffness\s+=\s+(\d+),", set)[0]
+            else: # static mode does not have speed setting
+                import numpy as np
+                setting_speed = np.nan
+                setting_stiffness = re.findall("stiffness\s+=\s+(\d+)", set)[0]
+            self.speeds.append(setting_speed)
+            self.stiffness.append(setting_stiffness)
+
+    def assemble_settings_df(self) -> pd.DataFrame:
+        """
+        Gathers the scraped info into one, neat, dataframe. For presentation to user.
+
+        Returns:
+            pd.DataFrame: dataframe with ["participant", "session", "id_sess", "mode", "stiffness", "speed"] columns
+        """
+        settings_df = pd.DataFrame(
+            {
+                "participant": self.participants,
+                "session": self.sessions,
+                "mode": self.modes,
+                "stiffness": self.stiffness,
+                "speed": self.speeds,
+            }
+        )
+
+        settings_df = settings_df.astype(
+            {
+                "participant": "object",
+                "session": "object",
+                "mode": "object",
+                "stiffness": float,
+                "speed": float,
+            }
+        )
+        settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
+        settings_df = settings_df[
+            ["participant", "session", "id_sess", "mode", "stiffness", "speed"]
+        ]
+        return settings_df
+
 
 def check_if_file_exists(file_loc: str) -> bool:
     '''

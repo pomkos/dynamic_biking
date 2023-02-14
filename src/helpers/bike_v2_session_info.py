@@ -3,6 +3,16 @@ import pandas as pd  # dataframe manipulation
 import streamlit as st  # GUI
 import matplotlib.pyplot as plt  # plot labeling
 
+from dataclasses import dataclass
+import datetime as dt
+
+@dataclass
+class sessionProperties:
+    mode: str
+    speed: int
+    stiffness: int
+    startTime: dt.datetime
+    endTime: dt.datetime
 
 def app(file_locs, out_path:str, pattern: str):
     if not pattern:
@@ -15,7 +25,11 @@ def app(file_locs, out_path:str, pattern: str):
         """
         )
         st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
-    settings = h.settings_finder(file_locs, pattern)
+    
+    s = h.settingsFinder()
+    s.bike_v2_settings(file_locations=file_locs, pattern=pattern)
+    settings = s.assemble_settings_df()
+
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()

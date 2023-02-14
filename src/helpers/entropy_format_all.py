@@ -59,15 +59,24 @@ def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=F
 
 
 @st.cache(suppress_st_warning=True)
-def load_dataframe(file_locs, pattern):
+def load_dataframe(file_locs, pattern, new_bike: bool) -> pd.DataFrame:
     """
     This function is cached so the dataset won't be reloaded on each run of the script
     """
     # import and format each bike dataframe
     dataframe = pd.DataFrame()
-    for i in range(len(file_locs)):
-        temp_df = h.file_formatter(file_locs[i], i + 1, pattern)
-        dataframe = dataframe.append(temp_df)
+    if new_bike:
+        for i in range(len(file_locs)):
+            df = pd.read_csv(file_locs[i], header=1)
+            df.columns = [col.strip() for col in df.columns]
+            for col in df.select_dtypes('object'):
+                df[col] = df[col].str.strip()
+            dataframe = pd.concat([dataframe, df])
+
+    else:
+        for i in range(len(file_locs)):
+            temp_df = h.file_formatter(file_locs[i], i + 1, pattern)
+            dataframe = dataframe.append(temp_df)
     return dataframe
 
 
