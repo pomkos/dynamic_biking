@@ -1,9 +1,14 @@
+"""
+Series of functions to get the dataset ready for what MatLab script
+expects as input
+"""
 from helpers import helper_functions as h  # brains behind the operation
 import pandas as pd  # dataframe manipulation
 import streamlit as st  # GUI
 import matplotlib.pyplot as plt  # save plot
 import seaborn as sns  # create plot
 from stqdm import stqdm  # progress bar
+from typing import List
 
 
 def save_as_files(dataframe: pd.DataFrame, out_path, save_form) -> None:
@@ -59,13 +64,13 @@ def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=F
 
 
 @st.cache(suppress_st_warning=True)
-def load_dataframe(file_locs, pattern, new_bike: bool) -> pd.DataFrame:
+def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
     """
     This function is cached so the dataset won't be reloaded on each run of the script
     """
     # import and format each bike dataframe
     dataframe = pd.DataFrame()
-    if new_bike:
+    if bike_version == 3:
         for i in range(len(file_locs)):
             df = pd.read_csv(file_locs[i], header=1)
             df.columns = [col.strip() for col in df.columns]
@@ -73,15 +78,15 @@ def load_dataframe(file_locs, pattern, new_bike: bool) -> pd.DataFrame:
                 df[col] = df[col].str.strip()
             dataframe = pd.concat([dataframe, df])
 
-    else:
+    elif bike_version == 2:
         for i in range(len(file_locs)):
-            temp_df = h.file_formatter(file_locs[i], i + 1, pattern)
+            temp_df = h.bike_v2_file_formatter(file_locs[i], i + 1, pattern)
             dataframe = dataframe.append(temp_df)
     return dataframe
 
 
 @st.cache()
-def cut_dataframe(dataframe, start, end):
+def cut_dataframe(dataframe: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
     """
     This function is cached so the dataset won't be recut each time a button is pressed
     """
@@ -96,7 +101,7 @@ def cut_dataframe(dataframe, start, end):
     return new_df
 
 
-def app(file_locs, pattern, in_path, out_path):
+def app(file_locs: List[str], bike_version: int, pattern: str, in_path: str, out_path: str):
     # all_filenames = h.get_filename(file_locs)
 
     st.write('''
@@ -107,7 +112,7 @@ This step will get the dynamic bike files in the `input` folder ready for entrop
 3. Once satisfied, click `Save` at the bottom of the page
 4. All files will be saved in the `output` folder, overwriting any existing files of the same name
     ''')
-    df = load_dataframe(file_locs, pattern)  # run once
+    df = load_dataframe(file_locs, pattern, bike_version)  # run once
     st.sidebar.write("--------------------")
     
     start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)

@@ -4,17 +4,10 @@ import streamlit as st  # GUI
 import matplotlib.pyplot as plt  # plot labeling
 
 from dataclasses import dataclass
+from typing import List
 import datetime as dt
 
-@dataclass
-class sessionProperties:
-    mode: str
-    speed: int
-    stiffness: int
-    startTime: dt.datetime
-    endTime: dt.datetime
-
-def app(file_locs, out_path:str, pattern: str):
+def app(file_locs: List[str], out_path:str, pattern: str):
     if not pattern:
         st.info(
             """
@@ -25,17 +18,17 @@ def app(file_locs, out_path:str, pattern: str):
         """
         )
         st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
-    
-    s = h.settingsFinder()
-    s.bike_v2_settings(file_locations=file_locs, pattern=pattern)
-    settings = s.assemble_settings_df()
-
+    file_locs = [file_locs[2]]
+    s = h.settingsFinder(file_locations=file_locs, pattern=pattern)
+    settings = s.assemble_settings_df(bike_version=2)
+    st.write(settings)
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()
 
     for i in range(len(file_locs)):
-        temp_df = h.file_formatter(file_locs[i], i + 1, pattern=pattern)
+        temp_df = h.bike_v2_file_formatter(file_locs[i], i + 1, pattern=pattern)
+        st.write(temp_df)
         time_diff = round((temp_df.iloc[-1, 2] - temp_df.iloc[0, 2]).seconds / 60, 2)
         df_length = df_length.append(
             pd.DataFrame(
@@ -48,6 +41,7 @@ def app(file_locs, out_path:str, pattern: str):
             ignore_index=True,
         )
         df = df.append(temp_df)
+    
     df_info = settings.merge(df_length, on=["participant", "session"])
     
     st.write(

@@ -67,7 +67,7 @@ def check_file_format(filename:str) -> None:
     if (filename.count('_') != 7):
         st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')
 
-def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
+def bike_v2_file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
     Formats the new dynamic bike output files into standard dataframes
 
@@ -95,6 +95,7 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         col.lower().replace("(", "_").replace(")", "").replace(" ", "_")
         for col in temp_df.columns
     ]
+
     # remove spaces from the timer column
     temp_df["timer"] = temp_df["timer"].str.replace(" ", "")
 
@@ -105,15 +106,13 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
         + temp_df["time_s"]
     )
     temp_df["date"] = pd.to_datetime(temp_df["date"])
-    # format timer column as timedelta
-    temp_df["timer"] = pd.to_timedelta(temp_df["timer"])
+
     # in seconds, because timedelta might be more dificult to calculate from
-    temp_df["seconds_elapsed"] = temp_df["timer"].apply(lambda x: x.total_seconds())
+    temp_df["seconds_elapsed"] = pd.to_timedelta(temp_df["timer"]).apply(lambda x: x.total_seconds())
     # define data types for each column
     temp_df = temp_df.astype(
         {"speed_rpm": float, "power_w": float, "heart_beat": float}
     )
-
     # extract sess, assumed to be at end of the filename
     check_file_format(filename)
     participant, session = get_idsess(filename, pattern)
@@ -139,76 +138,128 @@ def file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
     )
 
     temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+
+    return temp_df
+
+def bike_v3_file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
+    '''
+    Adds participant, session, id_sess columns
+    '''
+    # extract filename from location, used to get the participant ID and date
+    if ("/" in file) or ("\\" in file):
+        filename = file.replace("\\", "/").split("/")[-1]
+    else:
+        filename = file
+
+    # extract participant id from the filename
+    participant_id = filename.split("_")[0]
+    session_id = filename.split("_")[1]
+
+    temp_df = pd.read_csv(file, skiprows=1)
+    
+    # standardize column names
+    temp_df.columns = [col.strip().lower().replace(' ', '_') for col in temp_df.columns]
+    temp_df.columns = [col.replace(')', '').replace('(','_') for col in temp_df.columns]
+
+    # format strings to avoid unpleasant surprises
+    for col in temp_df.select_dtypes('object'):
+        temp_df[col] = temp_df[col].str.strip()
+    
+    temp_df['seconds_elapsed'] = pd.to_timedelta(temp_df['session_timer']).dt.total_seconds()
+    temp_df = temp_df.rename({
+        'session_timer': 'timer'
+    }, axis=1)
+
+    # extract date from the filename, then append the time column
+    temp_df["date"] = (
+        re.findall("(\d\d_\d\d_\d\d\d\d)", filename)[0].replace("_", "/")
+        + " "
+        + temp_df["time"]
+    ).astype('datetime64[ns]')
+
+    temp_df['participant'] = participant_id
+    temp_df['session'] = session_id
+ 
+    # reorganize columns
+    temp_df = temp_df[
+        [
+            "participant",
+            "session",
+            "date",
+            "timer",
+            "seconds_elapsed",
+            "speed_rpm",
+            "power_w",
+            "heart_beat",
+            "speed_set",
+            "stiffness"
+        ]
+    ]
+
+    # rename some columns
+    temp_df = temp_df.rename(
+        {"power_w": "power_watt", "heart_beat": "heart_rate"}, axis=1
+    )
+    temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+
     return temp_df
 
 class settingsFinder:
-    def __init__(self):
+    def __init__(self, file_locations: List[str], pattern: str):
         """
         Finds the mode, stiffness, and speed settings of the bike. Call bike_v3_settings
         for the bike put into testing in 2023, and bike_v2_settings for the bike in
         previous years. Ask Dr. Ridgel for guidance as needed.
 
-        input
-        -----
-        list: List of file locations, will be put into sess_finder function
-        pattern: placeholder, for user to provide ID pattern. Not used as of 8/3/2021
-
-        output
-        ------
-        settings_df: dataframe with 'sess', 'mode', 'stiffness', and 'speed' columns
+        Args:
+            file_locations (List[str]): List of locations for each raw output of the bike
+            pattern (str): Optional. regex pattern for the session/participant combo. Not used as of 8/3/2021
         """
-        # settings line, only used in bikev2 when the settings were in filenames and not stored as variables
-        # in the raw output files
-        self.settings = []
-        self.sessions = [] 
-        self.participants = []
+        self.settings: List[str] = []
+        self.sessions: List[str] = [] 
+        self.participants: List[str] = []
 
-        self.modes = []
-        self.stiffness = []
-        self.speeds = []
+        self.modes: List[str] = []
+        self.stiffness: List[str] = []
+        self.speeds: List[str] = []
+
+        self.file_locations: List[str] = file_locations
+        self.pattern: str = pattern
     
-    def bike_v3_settings(self, file_locations: List[str], pattern: str):
+    def bike_v3_settings(self):
         """
         From each file extracts the session number, participant number, mode, stiffness, speed,
         used for the bikev3 only. This information is presented to the user for a brief summary.
-
-        Args:
-            file_locations (List[str]): List of locations for each raw output of the bike
-            pattern (str): Optional. regex pattern for the session/participant combo
         """
-        filenames = []
+        file_locations = self.file_locations
+        pattern = self.pattern
+
         for i in range(len(file_locations)):
             with open(file_locations[i]) as f:
-                first_line = f.readline().strip("\n").lower()
-                for mode_type in ['static', 'dynamic']:
-                    if mode_type in first_line:
-                        self.modes.append(mode_type)
+                self.settings.append(f.readline().strip("\n").lower())
+            filename = file_locations[i].replace("/", "\\").split("\\")[-1]
+
+            part_id = filename.split('_')[0]
+            sess_id = filename.split('_')[1]
+            bike_mode = filename.split('_')[-1].strip('.txt')
+
+            self.modes.append(bike_mode)
+            self.participants.append(part_id)
+            self.sessions.append(sess_id)
             
             df = pd.read_csv(file_locations[i])
-            for col in df.select_dtypes('object'):
-                df[col] = df[col].str.strip()
-            speed_list = list(df['Speed Set'].unique())
-            assert len(speed_list) == 1, f"Expected only one speed setting per output file but got multiple: {file_locations[i]}"
-            self.speeds = speed_list[0]
-            stiffness_list = list(df['Stiffness'].unique())
-            assert len(stiffness_list) == 1, f"Expected only one stiffness setting per output file but got multiple: {file_locations[i]}"
-            self.stiffness = stiffness_list[0]
+            df.columns = [col.strip() for col in df.columns]
 
-            filenames.append(file_locations.split('/')[-1])
-        filenames = pd.Series(filenames)
-        id_sessions = filenames.str.extract(r'([a-z]\w+\d{3}?)_')
-        
+            st.error("Next step: get the stiffness and speed settings from new bike file")        
 
-    def bike_v2_settings(self, file_locations: List[str], pattern: str):
+    def bike_v2_settings(self):
         """
         From each file extracts the session number, participant number, mode, stiffness, speed,
         used for the bikev2 only. This information is presented to the user for a brief summary.
 
-        Args:
-            file_locations (List[str]): List of locations for each raw output of the bike
-            pattern (str): Optional. regex pattern for the session/participant combo
         """
-
+        file_locations = self.file_locations
+        pattern = self.pattern
         for i in range(len(file_locations)):
             with open(file_locations[i]) as f:
                 self.settings.append(f.readline().strip("\n").lower())
@@ -218,8 +269,6 @@ class settingsFinder:
             )  # grab ids with or without custom pattern
             self.participants.append(part_id)
             self.sessions.append(sess_id)
-
-
 
         for i in range(len(self.settings)):
             set = self.settings[i] # one setting line
@@ -236,22 +285,29 @@ class settingsFinder:
             self.speeds.append(setting_speed)
             self.stiffness.append(setting_stiffness)
 
-    def assemble_settings_df(self) -> pd.DataFrame:
+    def assemble_settings_df(self, bike_version: int) -> pd.DataFrame:
         """
         Gathers the scraped info into one, neat, dataframe. For presentation to user.
 
         Returns:
             pd.DataFrame: dataframe with ["participant", "session", "id_sess", "mode", "stiffness", "speed"] columns
         """
-        settings_df = pd.DataFrame(
-            {
-                "participant": self.participants,
-                "session": self.sessions,
-                "mode": self.modes,
-                "stiffness": self.stiffness,
-                "speed": self.speeds,
-            }
-        )
+        if bike_version == 2:
+            self.bike_v2_settings()
+        elif bike_version == 3:
+            self.bike_v3_settings()
+        else:
+            raise ValueError(f"Expected bike version 2 or 3, got {bike_version}")
+
+        settings_dict = {
+            "participant": self.participants,
+            "session": self.sessions,
+            "mode": self.modes,
+            "stiffness": self.stiffness,
+            "speed": self.speeds,
+        }
+        st.write(settings_dict)
+        settings_df = pd.DataFrame(settings_dict)
 
         settings_df = settings_df.astype(
             {

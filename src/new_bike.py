@@ -10,7 +10,8 @@ st.set_page_config(
 )  # Give website a title and icon
 st.title("Dynamic Bike File Processor")  # Title on main page
 
-h.check_matlab_file_loc()
+# h.check_matlab_file_loc()
+st.warning("DEV MODE: skipped checking for MatLab files")
 
 def read_txt_as_str(filename: str, extension: str) -> str:
     """
@@ -87,17 +88,23 @@ class gatherUserInfo:
             homepage = read_txt_as_str("homepage", 'txt')
             st.write(homepage)
             st.stop()
+        bike_version = st.number_input('Bike Version', min_value=2, max_value=3, step=1)
         # STEP 1 #
         if "overview" in get_info:
-            from helpers import bike_v2_session_info
+            from helpers import bike_v2_session_info, bike_v3_session_info
+            if bike_version == 2:
+                st.info("For the dynamic bike used 2020-2023")
+                bike_v2_session_info.app(file_locs, self.out_path, pattern=None)  # Load session_info app
 
-            bike_v2_session_info.app(file_locs, self.out_path, pattern=None,)  # Load session_info app
+            elif bike_version == 3:
+                st.info("For the dynamic bike used 2023 onwards")
+                bike_v3_session_info.app(file_locs, self.out_path, pattern=None)
 
         # STEP 2A #
         elif "sessions" in get_info:
             from helpers import entropy_format_all
 
-            entropy_format_all.app(file_locs, pattern=None, in_path=self.in_path, out_path=self.out_path)  # Load entropy_format_all
+            entropy_format_all.app(file_locs, pattern=None, bike_version=bike_version, in_path=self.in_path, out_path=self.out_path)  # Load entropy_format_all
 
         # STEP 3A #
         elif "participant" in get_info:
@@ -208,3 +215,6 @@ class gatherUserInfo:
         from helpers import entropy_eda
 
         entropy_eda.app(ent_file, self.out_path)
+
+if __name__ == "__main__":
+    g = gatherUserInfo()
