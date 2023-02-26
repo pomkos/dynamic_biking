@@ -234,6 +234,8 @@ class settingsFinder:
         file_locations = self.file_locations
         pattern = self.pattern
 
+        session_info_df = pd.DataFrame(columns=['participant', 'session', 'id_sess', 'mode', 'stiffness', 'speed_set', 'speed_avg', 'length_minutes'])
+
         for i in range(len(file_locations)):
             with open(file_locations[i]) as f:
                 self.settings.append(f.readline().strip("\n").lower())
@@ -241,16 +243,47 @@ class settingsFinder:
 
             part_id = filename.split('_')[0]
             sess_id = filename.split('_')[1]
+            # this is done within the fully assembled settings dataframe
+            id_sess = part_id + '_' + sess_id
             bike_mode = filename.split('_')[-1].strip('.txt')
 
             self.modes.append(bike_mode)
             self.participants.append(part_id)
             self.sessions.append(sess_id)
             
-            df = pd.read_csv(file_locations[i])
+            df = pd.read_csv(file_locations[i], header=1)
             df.columns = [col.strip() for col in df.columns]
+            df = df.rename({
+                'Time': 'time',
+                'Session Timer': 'session_timer',
+                'Interval Timer': 'interval_timer',
+                'Speed(RPM)': 'speed_avg',
+                'Power(W)': 'power',
+                'Heart Beat': 'heart_beat',
+                'Stiffness': 'stiffness',
+                'Speed Set': 'speed_set'
+            }, axis=1)
+            interval_timer = df['interval_timer'].str.split(':', expand=True).astype(int)
+            interval_timer = interval_timer.rename({
+                0: 'hours',
+                1: 'minutes',
+                2: 'seconds'
+            }, axis=1)
+            interval_timer['total_minutes'] = (interval_timer['hours']*60) + interval_timer['minutes'] + (interval_timer['seconds']/60)
+            df['interval_timer'] = interval_timer['total_minutes']
+            speed_settings = df.groupby(['stiffness', 'speed_set'])[['speed_avg','interval_timer']].mean()
+            speed_settings['participant'] = part_id
+            speed_settings['session'] = sess_id
+            speed_settings['mode'] = bike_mode
+            speed_settings = speed_settings.reset_index().rename({'interval_timer': 'length_minutes'}, axis=1)
 
-            st.error("Next step: get the stiffness and speed settings from new bike file")        
+            st.write(speed_settings)
+
+            session_info_df = pd.concat([session_info_df, speed_settings])
+
+        st.write(session_info_df)
+        st.error("Next step: get the stiffness and speed settings from new bike file")
+        return session_info_df
 
     def bike_v2_settings(self):
         """
@@ -292,36 +325,38 @@ class settingsFinder:
         Returns:
             pd.DataFrame: dataframe with ["participant", "session", "id_sess", "mode", "stiffness", "speed"] columns
         """
+        # run the appropriate settings extractors
         if bike_version == 2:
             self.bike_v2_settings()
+            # format the settings into a dataframe
+            settings_dict = {
+                "participant": self.participants,
+                "session": self.sessions,
+                "mode": self.modes,
+                "stiffness": self.stiffness,
+                "speed": self.speeds,
+            }
+            settings_df = pd.DataFrame(settings_dict)
+
+            settings_df = settings_df.astype(
+                {
+                    "participant": "object",
+                    "session": "object",
+                    "mode": "object",
+                    "stiffness": float,
+                    "speed": float,
+                }
+            )
         elif bike_version == 3:
-            self.bike_v3_settings()
+            settings_df = self.bike_v3_settings()
         else:
             raise ValueError(f"Expected bike version 2 or 3, got {bike_version}")
 
-        settings_dict = {
-            "participant": self.participants,
-            "session": self.sessions,
-            "mode": self.modes,
-            "stiffness": self.stiffness,
-            "speed": self.speeds,
-        }
-        st.write(settings_dict)
-        settings_df = pd.DataFrame(settings_dict)
-
-        settings_df = settings_df.astype(
-            {
-                "participant": "object",
-                "session": "object",
-                "mode": "object",
-                "stiffness": float,
-                "speed": float,
-            }
-        )
         settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
         settings_df = settings_df[
-            ["participant", "session", "id_sess", "mode", "stiffness", "speed"]
+            ["participant", "session", "id_sess", "mode", "stiffness", "speed_avg"]
         ]
+
         return settings_df
 
 
