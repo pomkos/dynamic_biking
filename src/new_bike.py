@@ -4,6 +4,7 @@ import streamlit as st  # GUI
 import os  # Get directory location
 from helpers import helper_functions as h
 from typing import List
+import re
 
 st.set_page_config(
     page_title="Dynamic Bike Script", page_icon=":bike:"
@@ -88,7 +89,9 @@ class gatherUserInfo:
             homepage = read_txt_as_str("homepage", 'txt')
             st.write(homepage)
             st.stop()
-        bike_version = st.number_input('Bike Version', min_value=2, max_value=3, step=1)
+        bike_version_str = st.selectbox('Bike Version', ['Dynamic Bike v2', 'Dynamic Bike v3'])
+        bike_version = re.findall(r'[0-9]', bike_version_str)[0]
+        bike_version = int(bike_version)
         # STEP 1 #
         if "overview" in get_info:
             from helpers import bike_v2_session_info, bike_v3_session_info
