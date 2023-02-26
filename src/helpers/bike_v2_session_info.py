@@ -21,14 +21,12 @@ def app(file_locs: List[str], out_path:str, pattern: str):
     file_locs = [file_locs[2]]
     s = h.settingsFinder(file_locations=file_locs, pattern=pattern)
     settings = s.assemble_settings_df(bike_version=2)
-    st.write(settings)
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()
 
     for i in range(len(file_locs)):
         temp_df = h.bike_v2_file_formatter(file_locs[i], i + 1, pattern=pattern)
-        st.write(temp_df)
         time_diff = round((temp_df.iloc[-1, 2] - temp_df.iloc[0, 2]).seconds / 60, 2)
         df_length = df_length.append(
             pd.DataFrame(
