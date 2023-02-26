@@ -1,6 +1,6 @@
 """
 Series of functions to get the dataset ready for what MatLab script
-expects as input
+expects as input. Formats the entire dataset all at once
 """
 from helpers import helper_functions as h  # brains behind the operation
 import pandas as pd  # dataframe manipulation

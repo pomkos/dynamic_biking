@@ -1,3 +1,8 @@
+'''
+This script relies on the MatLab entropy calculator scripts' output, 
+must have a "Power" and "ID" column, where the "ID" column is unique
+to each participant and session.
+'''
 import glob
 import pandas as pd
 import streamlit as st
@@ -75,7 +80,7 @@ def perc_time_in_col(dataframe, col, threshold=0, perc="greater", id_col="ID"):
         df_merged = df_merged.sort_values(f"effort", ascending=False)
         return df_merged
     except Exception as e:
-        print(
+        st.error(
             "REMINDER: make sure participant ID and session labels are one variable (ex: id_sess)"
         )
         return e

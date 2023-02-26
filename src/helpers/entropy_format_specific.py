@@ -1,3 +1,7 @@
+'''
+Allows the user to select specific participants and sessions with to format
+for the MatLab entropy script. 
+'''
 from helpers import helper_functions as h  # brains behind the operation
 import pandas as pd  # dataframe manipulation
 import streamlit as st  # GUI
