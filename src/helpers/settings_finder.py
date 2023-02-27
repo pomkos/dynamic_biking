@@ -53,11 +53,12 @@ class settingsFinder:
             self.sessions.append(sess_id)
             
             temp_df = bike_v3_data_loader(file_locations[i], i=i, pattern=None)
-            speed_settings = temp_df.groupby(['stiffness', 'speed_set'])[['speed_avg','interval_timer']].mean()
+            speed_settings = temp_df.groupby(['stiffness', 'speed_set'])[['speed_rpm','interval_timer']].mean()
             speed_settings['participant'] = part_id
             speed_settings['session'] = sess_id
             speed_settings['mode'] = bike_mode
             speed_settings = speed_settings.reset_index().rename({'interval_timer': 'length_minutes'}, axis=1)
+            speed_settings = speed_settings.rename({'speed_rpm': 'speed_avg'}, axis=1)
 
             st.write(speed_settings)
 

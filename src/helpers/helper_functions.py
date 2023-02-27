@@ -191,6 +191,8 @@ def bike_v3_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
     # get the seconds elapsed for each interval
     for timer_type in ['session', 'interval']:
         temp_df[f'seconds_elapsed_{timer_type}'] = pd.to_timedelta(temp_df[f'{timer_type}_timer']).dt.total_seconds()
+    
+    temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
 
     return temp_df
 
