@@ -67,7 +67,7 @@ def check_file_format(filename:str) -> None:
     if (filename.count('_') != 7):
         st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')
 
-def bike_v2_file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
+def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
     Formats the new dynamic bike output files into standard dataframes
 
@@ -78,7 +78,7 @@ def bike_v2_file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
 
     output
     ------
-    temp_df: preformatted and astyped datafrane
+    temp_df: preformatted and astyped dataframe
     """
     import re
     import streamlit as st
@@ -141,6 +141,59 @@ def bike_v2_file_formatter(file: str, i: int, pattern: str) -> pd.DataFrame:
 
     return temp_df
 
+def bike_v3_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
+    """
+    Formats the dynamic bike v3 output files into standard dataframes
+
+    input
+    -----
+    file: location and filename of the file
+    i: subject number
+
+    output
+    ------
+    temp_df: preformatted and astyped dataframe
+    """
+    import re
+    # extract filename from location, used to get the participant ID and date
+    if ("/" in file) or ("\\" in file):
+        filename = file.replace("\\", "/").split("/")[-1]
+    else:
+        filename = file
+
+    # extract participant id from the filename
+    participant_id = filename.split("_")[0]
+    session_id = filename.split("_")[1]
+ 
+    temp_df = pd.read_csv(file, header=1)
+
+    temp_df['participant'] = participant_id
+    temp_df['session'] = session_id
+
+    temp_df.columns = [col.strip() for col in temp_df.columns]
+    temp_df = temp_df.rename({
+        'Time': 'time',
+        'Session Timer': 'session_timer',
+        'Interval Timer': 'interval_timer',
+        'Speed(RPM)': 'speed_rpm',
+        'Power(W)': 'power_watt',
+        'Heart Beat': 'heart_rate',
+        'Stiffness': 'stiffness',
+        'Speed Set': 'speed_set'
+    }, axis=1)
+    # extract date from the filename, then append the time column
+    temp_df["date"] = (
+        re.findall("(\d\d_\d\d_\d\d\d\d)", file)[0].replace("_", "/")
+        + " "
+        + temp_df["time"]
+    ).astype('datetime64[ns]')
+
+    # get the seconds elapsed for each interval
+    for timer_type in ['session', 'interval']:
+        temp_df[f'seconds_elapsed_{timer_type}'] = pd.to_timedelta(temp_df[f'{timer_type}_timer']).dt.total_seconds()
+
+    return temp_df
+
 class settingsFinder:
     def __init__(self, file_locations: List[str], pattern: str):
         """
@@ -188,27 +241,8 @@ class settingsFinder:
             self.participants.append(part_id)
             self.sessions.append(sess_id)
             
-            df = pd.read_csv(file_locations[i], header=1)
-            df.columns = [col.strip() for col in df.columns]
-            df = df.rename({
-                'Time': 'time',
-                'Session Timer': 'session_timer',
-                'Interval Timer': 'interval_timer',
-                'Speed(RPM)': 'speed_avg',
-                'Power(W)': 'power',
-                'Heart Beat': 'heart_beat',
-                'Stiffness': 'stiffness',
-                'Speed Set': 'speed_set'
-            }, axis=1)
-            interval_timer = df['interval_timer'].str.split(':', expand=True).astype(int)
-            interval_timer = interval_timer.rename({
-                0: 'hours',
-                1: 'minutes',
-                2: 'seconds'
-            }, axis=1)
-            interval_timer['total_minutes'] = (interval_timer['hours']*60) + interval_timer['minutes'] + (interval_timer['seconds']/60)
-            df['interval_timer'] = interval_timer['total_minutes']
-            speed_settings = df.groupby(['stiffness', 'speed_set'])[['speed_avg','interval_timer']].mean()
+            temp_df = bike_v3_data_loader(file_locations[i], i=i, pattern=None)
+            speed_settings = temp_df.groupby(['stiffness', 'speed_set'])[['speed_avg','interval_timer']].mean()
             speed_settings['participant'] = part_id
             speed_settings['session'] = sess_id
             speed_settings['mode'] = bike_mode
