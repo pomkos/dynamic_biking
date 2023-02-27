@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt  # plot labeling
 from dataclasses import dataclass
 from typing import List
 import datetime as dt
+from helpers.settings_finder import settingsFinder
 
 def app(file_locs: List[str], out_path:str, pattern: str):
     if not pattern:
@@ -19,8 +20,8 @@ def app(file_locs: List[str], out_path:str, pattern: str):
         )
         st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
     file_locs = [file_locs[2]]
-    s = h.settingsFinder(file_locations=file_locs, pattern=pattern)
-    settings = s.assemble_settings_df(bike_version=2)
+    sf = settingsFinder(file_locations=file_locs, pattern=pattern)
+    settings = sf.assemble_settings_df(bike_version=2)
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()
