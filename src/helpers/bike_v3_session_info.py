@@ -5,6 +5,13 @@ import re
 from helpers.settings_finder import settingsFinder
 from helpers import helper_functions as h
 from typing import List
+from dataclasses import dataclass
+
+@dataclass
+class userInput:
+    save_plot: bool
+    save_settings_df: bool
+    submit_button: bool
 
 def app(file_locs: List[str], out_path: str, pattern: str):
     st.write(file_locs)
