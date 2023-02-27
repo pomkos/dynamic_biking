@@ -8,6 +8,12 @@ from typing import List
 import datetime as dt
 from helpers.settings_finder import settingsFinder
 
+@dataclass
+class userInput:
+    save_plot: bool
+    save_settings_df: bool
+    submit_button: bool
+
 def app(file_locs: List[str], out_path:str, pattern: str):
     if not pattern:
         st.info(
@@ -21,7 +27,7 @@ def app(file_locs: List[str], out_path:str, pattern: str):
         st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
     file_locs = [file_locs[2]]
     sf = settingsFinder(file_locations=file_locs, pattern=pattern)
-    settings = sf.assemble_settings_df(bike_version=2)
+    settings_df = sf.assemble_settings_df(bike_version=2)
     # import and format each bike dataframe
     df = pd.DataFrame()
     df_length = pd.DataFrame()
@@ -41,7 +47,7 @@ def app(file_locs: List[str], out_path:str, pattern: str):
         )
         df = df.append(temp_df)
     
-    df_info = settings.merge(df_length, on=["participant", "session"])
+    df_info = settings_df.merge(df_length, on=["participant", "session"])
     
     st.write(
         """ The table includes some basic information about sessions, including:
@@ -64,23 +70,23 @@ def app(file_locs: List[str], out_path:str, pattern: str):
 
     with save_form:
         st.subheader("What should be saved?")
-        save_plot = st.checkbox("The plot as it looks now")
-        save_df_info = st.checkbox(
+        userInput.save_plot = st.checkbox("The plot as it looks now")
+        userInput.save_settings_df = st.checkbox(
             "The table as an excel file (required for MatLab entropy script)",
             value=True,
         )
-        save = st.form_submit_button("Save")
+        userInput.submit_button = st.form_submit_button("Save")
         save_form = st.empty()
         save_form.info("All selected items will be saved in the 'output' folder")
 
-    if save:
-        if save_df_info:
+    if userInput.submit_button:
+        if userInput.save_settings_df:
             try:
                 h.save_dataset(df_info, f"{out_path}/session_info", extension="xls")
             except PermissionError as p:
                 st.error("Can't save the dataset, is `session_info.xls` open somewhere?")
                 st.stop()
-        if save_plot:
+        if userInput.save_plot:
             h.bar_plot(
                 "participant",
                 "length_minutes",
