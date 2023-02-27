@@ -5,30 +5,20 @@ import streamlit as st
 import re
 from typing import List
 
+def save_dataset(dataframe, name, extension="xlsx"):
+    """
+    Function to standardize saving files
+    """
+    dataframe.to_excel(f"{name}.{extension}", index=False)
 
-def get_idsess(filename: str, pattern: str):
+
+def get_idsess_from_bike_v2(filename: str, pattern: str):
     """
     Returns a list of filenames, extract from string of location
     """
     import re
     import streamlit as st
 
-    # filenames = []
-    # nolabels = []
-    # for file in file_locs:
-    #     if ("/" in file) or ("\\" in file):
-    #         filename = file.replace("\\", "/").split("/")[-1].lower()
-    #         newname = re.findall('\d{2}_\d{2}_\d{2}_([a-z].+)\.txt$',filename)[0] # extract everything between the time and .txt
-    #         newname = newname.replace('dynamic','').replace('static','').strip('_') # remove dynamic and static
-    #         if len(newname) == 0: # if regex didn't find a label, the file was named incorrectly
-    #             nolabels.append(filename)
-    #             # NEED TO NOTIFY USER AND STOP SCRIPT
-    #         else:
-    #             filenames.append(newname)
-    #     else:
-    #         filename = file
-    #         filenames.append(file)
-    # filenames.sort()
     if pattern:
         my_id = re.findall(f"({pattern['id']})", filename)[0]
         sess = re.findall(f"({pattern['sess']})", filename)[0]
@@ -37,13 +27,6 @@ def get_idsess(filename: str, pattern: str):
         my_id = filename.split("_")[-2].strip(".txt")
         sess = filename.split("_")[-1].strip(".txt")
         return my_id, sess
-
-
-def save_dataset(dataframe, name, extension="xlsx"):
-    """
-    Function to standardize saving files
-    """
-    dataframe.to_excel(f"{name}.{extension}", index=False)
 
 
 def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
@@ -57,15 +40,6 @@ def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
     if save:
         plt.savefig(f"{out_path}/bar_plot.png", dpi=300)
     return fig
-
-def check_file_format(filename:str) -> None:
-    '''
-    Checks whether files have been named using the convention
-    `partID_sessID`
-    '''
-    import streamlit as st
-    if (filename.count('_') != 7):
-        st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')
 
 def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
     """
@@ -115,7 +89,7 @@ def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
     )
     # extract sess, assumed to be at end of the filename
     check_file_format(filename)
-    participant, session = get_idsess(filename, pattern)
+    participant, session = get_idsess_from_bike_v2(filename, pattern)
     temp_df["session"] = session
     temp_df["participant"] = participant
 
@@ -230,3 +204,12 @@ def check_matlab_file_loc():
             num_not_exist += 1
     if num_not_exist:
         st.info("__INFO__: The MatLab script assumes each of the above files are in the given location. Move them there before double clicking on `entropy_script.m`. These are not included with this script, but Dr. Ridgel has them.")
+
+def check_file_format(filename:str) -> None:
+    '''
+    Checks whether files have been named using the convention
+    `partID_sessID`
+    '''
+    import streamlit as st
+    if (filename.count('_') != 7):
+        st.warning(f'Was the file "{filename}" renamed per convention? There should be exactly 7 "\_" in the filename')

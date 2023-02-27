@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 
 from typing import List
-from helpers.helper_functions import bike_v2_data_loader, bike_v3_data_loader, get_idsess
+from helpers.helper_functions import bike_v2_data_loader, bike_v3_data_loader, get_idsess_from_bike_v2
 
 class settingsFinder:
     def __init__(self, file_locations: List[str], pattern: str):
@@ -80,7 +80,7 @@ class settingsFinder:
             with open(file_locations[i]) as f:
                 self.settings.append(f.readline().strip("\n").lower())
             filename = file_locations[i].replace("/", "\\").split("\\")[-1]
-            part_id, sess_id = get_idsess(
+            part_id, sess_id = get_idsess_from_bike_v2(
                 filename, pattern
             )  # grab ids with or without custom pattern
             self.participants.append(part_id)
