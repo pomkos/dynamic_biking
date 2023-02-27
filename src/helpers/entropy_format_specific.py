@@ -69,8 +69,8 @@ def load_dataframe(file_locs, pattern):
     # import and format each bike dataframe
     dataframe = pd.DataFrame()
     for i in range(len(file_locs)):
-        temp_df = h.bike_v2_file_formatter(file_locs[i], i + 1, pattern)
-        dataframe = dataframe.append(temp_df)
+        temp_df = h.bike_v2_data_loader(file_locs[i], i + 1, pattern)
+        dataframe = pd.concat([dataframe, temp_df])
     return dataframe
 
 

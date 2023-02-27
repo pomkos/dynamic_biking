@@ -80,7 +80,7 @@ def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
 
     elif bike_version == 2:
         for i in range(len(file_locs)):
-            temp_df = h.bike_v2_file_formatter(file_locs[i], i + 1, pattern)
+            temp_df = h.bike_v2_data_loader(file_locs[i], i + 1, pattern)
             dataframe = dataframe.append(temp_df)
     return dataframe
 
