@@ -12,9 +12,6 @@ st.set_page_config(
 )  # Give website a title and icon
 st.title("Dynamic Bike File Processor")  # Title on main page
 
-# h.check_matlab_file_loc()
-st.warning("DEV MODE: skipped checking for MatLab files")
-
 def read_txt_as_str(filename: str, extension: str) -> str:
     """
     Loads txt files, returns contents as string

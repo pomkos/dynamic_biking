@@ -32,7 +32,7 @@ def app(file_locs: List[str], out_path:str, pattern: str):
     df_length = pd.DataFrame()
 
     for i in range(len(file_locs)):
-        temp_df = h.bike_v2_data_loader(file_locs[i], i + 1, pattern=pattern)
+        temp_df = h.bike_v2_data_loader(file_locs[i], pattern=pattern)
         time_diff = round((temp_df.iloc[-1, 2] - temp_df.iloc[0, 2]).seconds / 60, 2)
         df_length = df_length.append(
             pd.DataFrame(
