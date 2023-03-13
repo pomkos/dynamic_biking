@@ -71,16 +71,14 @@ def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
     # import and format each bike dataframe
     dataframe = pd.DataFrame()
     if bike_version == 3:
+        from helpers.helper_functions import bike_v3_data_loader
         for i in range(len(file_locs)):
-            df = pd.read_csv(file_locs[i], header=1)
-            df.columns = [col.strip() for col in df.columns]
-            for col in df.select_dtypes('object'):
-                df[col] = df[col].str.strip()
+            df, bike_mode = bike_v3_data_loader(file_locs[i], pattern=None)
             dataframe = pd.concat([dataframe, df])
 
     elif bike_version == 2:
         for i in range(len(file_locs)):
-            temp_df = h.bike_v2_data_loader(file_locs[i], i + 1, pattern)
+            temp_df = h.bike_v2_data_loader(file_locs[i], pattern)
             dataframe = dataframe.append(temp_df)
     return dataframe
 
@@ -113,6 +111,7 @@ This step will get the dynamic bike files in the `input` folder ready for entrop
 4. All files will be saved in the `output` folder, overwriting any existing files of the same name
     ''')
     df = load_dataframe(file_locs, pattern, bike_version)  # run once
+    st.write(df)
     st.sidebar.write("--------------------")
     
     start = st.sidebar.number_input("Start", min_value=0.0, step=1.0)
@@ -127,9 +126,13 @@ This step will get the dynamic bike files in the `input` folder ready for entrop
     st.subheader("Mass edit")
 
     reverse = st.checkbox("Columns as participants")
+    if bike_version == 3:
+        seconds_elapsed = "seconds_elapsed_session"
+    else:
+        seconds_elapsed = "seconds_elapsed"
     with st.spinner("Loading facet grid plot"):
         plot = facet_grid(
-            x="seconds_elapsed",
+            x=seconds_elapsed,
             y="speed_rpm",
             dataframe=new_df,  # run if parameters are changed
             out_path=out_path,

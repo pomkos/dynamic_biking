@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
@@ -41,7 +42,7 @@ def bar_plot(x, y, title, dataframe, out_path, hue=None, save=False):
         plt.savefig(f"{out_path}/bar_plot.png", dpi=300)
     return fig
 
-def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
+def bike_v2_data_loader(file: str, pattern: str) -> pd.DataFrame:
     """
     Formats the new dynamic bike output files into standard dataframes
 
@@ -69,7 +70,6 @@ def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
         col.lower().replace("(", "_").replace(")", "").replace(" ", "_")
         for col in temp_df.columns
     ]
-
     # remove spaces from the timer column
     temp_df["timer"] = temp_df["timer"].str.replace(" ", "")
 
@@ -115,60 +115,81 @@ def bike_v2_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
 
     return temp_df
 
-def bike_v3_data_loader(file: str, i: int, pattern: str) -> pd.DataFrame:
+def bike_v3_data_loader(file: str, pattern: str) -> pd.DataFrame:
     """
     Formats the dynamic bike v3 output files into standard dataframes
 
     input
     -----
     file: location and filename of the file
-    i: subject number
+    bike_mode: "static" or "dynamic". If static, will pass to v2 loader.
 
     output
     ------
     temp_df: preformatted and astyped dataframe
     """
     import re
+    bike_mode = file.split('_')[-1].strip('.txt').lower()
+
+    if bike_mode == "static":
+        # static version of dynamic bike V3 only has "," before each column name but not the value name
+        wrong_format_right_columns = pd.read_csv('../input/test1_session001_01_12_2023Time18_45_39_Static.txt', header=1)
+        temp_df = wrong_format_right_columns['Time'].str.split('\s+', expand=True)
+        for col in temp_df:
+            temp_df[col] = temp_df[col].str.strip()
+            if (temp_df[col] == '').sum() == len(temp_df):
+                # this is an all blanks column and should be dropped
+                temp_df = temp_df.drop(col, axis=1)
+        # static has no speed settings, it's powered by participant
+        temp_df.columns = wrong_format_right_columns.columns
+        temp_df['Speed Set'] = np.nan
+
+    else:
+        # dynamic version of file is correctly formatted, with a "," before each value (but after each col name)
+        temp_df = pd.read_csv(file, header=1)
+
     # extract filename from location, used to get the participant ID and date
     if ("/" in file) or ("\\" in file):
         filename = file.replace("\\", "/").split("/")[-1]
     else:
         filename = file
 
-    # extract participant id from the filename
-    participant_id = filename.split("_")[0]
-    session_id = filename.split("_")[1]
- 
-    temp_df = pd.read_csv(file, header=1)
-
-    temp_df['participant'] = participant_id
-    temp_df['session'] = session_id
-
-    temp_df.columns = [col.strip() for col in temp_df.columns]
-    temp_df = temp_df.rename({
-        'Time': 'time',
-        'Session Timer': 'session_timer',
-        'Interval Timer': 'interval_timer',
-        'Speed(RPM)': 'speed_rpm',
-        'Power(W)': 'power_watt',
-        'Heart Beat': 'heart_rate',
-        'Stiffness': 'stiffness',
-        'Speed Set': 'speed_set'
-    }, axis=1)
-    # extract date from the filename, then append the time column
-    temp_df["date"] = (
-        re.findall("(\d\d_\d\d_\d\d\d\d)", file)[0].replace("_", "/")
-        + " "
-        + temp_df["time"]
-    ).astype('datetime64[ns]')
-
-    # get the seconds elapsed for each interval
-    for timer_type in ['session', 'interval']:
-        temp_df[f'seconds_elapsed_{timer_type}'] = pd.to_timedelta(temp_df[f'{timer_type}_timer']).dt.total_seconds()
+    try:
+        # extract participant id from the filename
+        participant_id = filename.split("_")[0]
+        session_id = filename.split("_")[1]
     
-    temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+        temp_df['participant'] = participant_id
+        temp_df['session'] = session_id
 
-    return temp_df
+        temp_df.columns = [col.strip() for col in temp_df.columns]
+        temp_df = temp_df.rename({
+            'Time': 'time',
+            'Session Timer': 'session_timer',
+            'Interval Timer': 'interval_timer',
+            'Speed(RPM)': 'speed_rpm',
+            'Power(W)': 'power_watt',
+            'Heart Beat': 'heart_rate',
+            'Stiffness': 'stiffness',
+            'Speed Set': 'speed_set'
+        }, axis=1)
+        # extract date from the filename, then append the time column
+        temp_df["date"] = (
+            re.findall("(\d\d_\d\d_\d\d\d\d)", file)[0].replace("_", "/")
+            + " "
+            + temp_df["time"]
+        ).astype('datetime64[ns]')
+
+        # get the seconds elapsed for each interval
+        for timer_type in ['session', 'interval']:
+            temp_df[f'seconds_elapsed_{timer_type}'] = pd.to_timedelta(temp_df[f'{timer_type}_timer']).dt.total_seconds()
+        
+        temp_df["id_sess"] = temp_df["participant"] + "_" + temp_df["session"]
+
+        return temp_df, bike_mode
+    except:
+        st.warning(f"Is `{filename}` a Dynamic Bike v2 file? Unable to load, skipping this file.")
+        return pd.DataFrame(), bike_mode
 
 def check_if_file_exists(file_loc: str) -> bool:
     '''

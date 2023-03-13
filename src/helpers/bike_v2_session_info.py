@@ -25,7 +25,6 @@ def app(file_locs: List[str], out_path:str, pattern: str):
         """
         )
         st.write("__Example__: 06\_30\_2021Time16\_29\_36\_Dynamic\_`pdbike001_day001.txt`")
-    file_locs = [file_locs[2]]
     sf = settingsFinder(file_locations=file_locs, pattern=pattern)
     settings_df = sf.assemble_settings_df(bike_version=2)
     # import and format each bike dataframe

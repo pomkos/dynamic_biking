@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+import numpy as np # for nan
 import streamlit as st
 
 from typing import List
@@ -27,7 +28,7 @@ class settingsFinder:
         self.file_locations: List[str] = file_locations
         self.pattern: str = pattern
     
-    def bike_v3_settings(self):
+    def bike_v3_settings(self, all_participants_sessions_df):
         """
         From each file extracts the session number, participant number, mode, stiffness, speed,
         used for the bikev3 only. This information is presented to the user for a brief summary.
@@ -37,35 +38,30 @@ class settingsFinder:
 
         session_info_df = pd.DataFrame(columns=['participant', 'session', 'id_sess', 'mode', 'stiffness', 'speed_set', 'speed_avg', 'length_minutes'])
 
-        for i in range(len(file_locations)):
-            with open(file_locations[i]) as f:
-                self.settings.append(f.readline().strip("\n").lower())
-            filename = file_locations[i].replace("/", "\\").split("\\")[-1]
+        for id_sess in all_participants_sessions_df['id_sess'].unique():
+            temp_df = all_participants_sessions_df[all_participants_sessions_df['id_sess']==id_sess]
+            id_sess_data = {}
+            for col in ['participant', 'session', 'id_sess', 'mode']:
+                id_sess_data[col] = temp_df[col].unique()[0]
 
-            part_id = filename.split('_')[0]
-            sess_id = filename.split('_')[1]
-            # this is done within the fully assembled settings dataframe
-            id_sess = part_id + '_' + sess_id
-            bike_mode = filename.split('_')[-1].strip('.txt')
+            if id_sess_data['mode'].lower() == 'dynamic':
+                grpd_object = temp_df.groupby(['stiffness', 'speed_set'])
+            else:
+                grpd_object = temp_df.groupby(['stiffness'])
 
-            self.modes.append(bike_mode)
-            self.participants.append(part_id)
-            self.sessions.append(sess_id)
-            
-            temp_df = bike_v3_data_loader(file_locations[i], i=i, pattern=None)
-            speed_settings = temp_df.groupby(['stiffness', 'speed_set'])[['speed_rpm','interval_timer']].mean()
-            speed_settings['participant'] = part_id
-            speed_settings['session'] = sess_id
-            speed_settings['mode'] = bike_mode
-            speed_settings = speed_settings.reset_index().rename({'interval_timer': 'length_minutes'}, axis=1)
+            speed_settings = grpd_object[['speed_rpm']].mean().reset_index()
+            speed_settings['length_minutes'] = grpd_object.size().reset_index()[0]/60
+
+            speed_settings['length_minutes'] = speed_settings['length_minutes'].round(2)
+            speed_settings['participant'] = id_sess_data['participant']
+            speed_settings['session'] = id_sess_data['session']
+            speed_settings['mode'] = id_sess_data['mode']
+
             speed_settings = speed_settings.rename({'speed_rpm': 'speed_avg'}, axis=1)
 
-            st.write(speed_settings)
 
             session_info_df = pd.concat([session_info_df, speed_settings])
 
-        st.write(session_info_df)
-        st.error("Next step: get the stiffness and speed settings from new bike file")
         return session_info_df
 
     def bike_v2_settings(self):
@@ -136,8 +132,4 @@ class settingsFinder:
             raise ValueError(f"Expected bike version 2 or 3, got {bike_version}")
 
         settings_df["id_sess"] = settings_df["participant"] + "_" + settings_df["session"]
-        settings_df = settings_df[
-            ["participant", "session", "id_sess", "mode", "stiffness", "speed_avg"]
-        ]
-
         return settings_df

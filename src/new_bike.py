@@ -114,7 +114,6 @@ class gatherUserInfo:
             elif userInput.bike_version == 3:
                 st.info("For the dynamic bike used 2023 onwards")
                 bike_v3_session_info.app(file_locs, self.out_path, pattern=None)
-
         # STEP 2A #
         elif "sessions" in sidebar_page:
             from helpers import entropy_format_all
@@ -125,7 +124,7 @@ class gatherUserInfo:
         elif "participant" in sidebar_page:
             from helpers import entropy_format_specific
 
-            entropy_format_specific.app(file_locs, pattern=None, in_path=self.in_path, out_path=self.out_path) # Load entropy_format_specific
+            entropy_format_specific.app(file_locs, pattern=None, bike_version=userInput.bike_version, in_path=self.in_path, out_path=self.out_path) # Load entropy_format_specific
 
         # STEP 3 #
         elif "entropy" in sidebar_page:
