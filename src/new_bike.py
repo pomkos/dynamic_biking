@@ -105,7 +105,7 @@ class gatherUserInfo:
         if "overview" in sidebar_page:
             from helpers import bike_v2_session_info, bike_v3_session_info
             if userInput.bike_version == 2:
-                st.info("For the dynamic bike used 2020-2023")
+                st.info("For the dynamic bike used prior to 2023")
                 bike_v2_session_info.app(file_locs, self.out_path, pattern=None)  # Load session_info app
 
             elif userInput.bike_version == 3:

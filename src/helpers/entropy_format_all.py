@@ -63,7 +63,7 @@ def facet_grid(x, y, title, dataframe, out_path, hue=None, reverse=False, save=F
     return g
 
 
-@st.cache(suppress_st_warning=True)
+@st.cache_data(suppress_st_warning=True)
 def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
     """
     This function is cached so the dataset won't be reloaded on each run of the script
@@ -83,7 +83,7 @@ def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
     return dataframe
 
 
-@st.cache()
+@st.cache_data()
 def cut_dataframe(dataframe: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
     """
     This function is cached so the dataset won't be recut each time a button is pressed
