@@ -84,7 +84,7 @@ def load_dataframe(file_locs, pattern, bike_version: int) -> pd.DataFrame:
 
 
 @st.cache_data()
-def cut_dataframe(dataframe: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
+def cut_dataframe(dataframe, start, end, seconds_elapsed_name: str):
     """
     This function is cached so the dataset won't be recut each time a button is pressed
     """
@@ -95,7 +95,7 @@ def cut_dataframe(dataframe: pd.DataFrame, start: int, end: int) -> pd.DataFrame
     if end == 0:
         end = len(dataframe)
     
-    new_df = dataframe[(dataframe["seconds_elapsed"] >= start) & (dataframe["seconds_elapsed"] <= end)]
+    new_df = dataframe[(dataframe[seconds_elapsed_name] >= start) & (dataframe[seconds_elapsed_name] <= end)]
     return new_df
 
 
@@ -120,19 +120,21 @@ This step will get the dynamic bike files in the `input` folder ready for entrop
         "Modify the dataset to eliminate sudden jumps at the beginning or end of the graphs"
     )
 
+    if bike_version == 3:
+        seconds_elapsed_name = "seconds_elapsed_session"
+    else:
+        seconds_elapsed_name = "seconds_elapsed"
+
     new_df = cut_dataframe(
-        df, start, end
+        df, start, end, seconds_elapsed_name
     ).copy()  # run if the start/end values are changed
     st.subheader("Mass edit")
 
     reverse = st.checkbox("Columns as participants")
-    if bike_version == 3:
-        seconds_elapsed = "seconds_elapsed_session"
-    else:
-        seconds_elapsed = "seconds_elapsed"
+
     with st.spinner("Loading facet grid plot"):
         plot = facet_grid(
-            x=seconds_elapsed,
+            x=seconds_elapsed_name,
             y="speed_rpm",
             dataframe=new_df,  # run if parameters are changed
             out_path=out_path,
