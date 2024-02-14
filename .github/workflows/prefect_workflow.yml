@@ -31,4 +31,4 @@ jobs:
         run: prefect deploy
 
       - name: Run Prefect flow
-        run: prefect run --name personal_prefect_flow
+        run: prefect run --name dynamic_bike
