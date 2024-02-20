@@ -1,6 +1,7 @@
 name: Prefect Workflow
 
 on:
+  repository_dispatch: # to run via webhook
   push:
     branches:
       - main
